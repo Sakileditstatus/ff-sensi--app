@@ -1,0 +1,19 @@
+{
+  "name": "ff-headshot-sensi-api",
+  "version": "6.0.0",
+  "description": "Free Fire Headshot Sensitivity API — device-based real sensitivity generator",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
