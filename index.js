@@ -53,13 +53,10 @@ function getDeviceTier(score) {
     return "high";
 }
 
-function recommendDPI(score) {
-    if (score <= 20) return 300;
-    if (score <= 33) return 400;
-    if (score <= 50) return 500;
-    if (score <= 66) return 700;
-    if (score <= 80) return 900;
-    return 1200;
+function recommendDPI(score, gpuTier) {
+    if (score >= 80 && gpuTier >= 3) return 500;
+    // Standard Range: 370 to 460
+    return Math.round(370 + (normalize(score, 0, 80) * 90));
 }
 
 function dpiStatus(current, recommended) {
@@ -77,7 +74,7 @@ function dpiAdvice(current, recommended) {
 
 function headShotSensitivity(score, dpi, rr, screen, gpuTier) {
     const tier = getDeviceTier(score);
-    const recDPI = recommendDPI(score);
+    const recDPI = recommendDPI(score, gpuTier);
 
     let fine;
     if (tier === "low") fine = Math.round(normalize(score, 0, 33) * 10);
@@ -112,13 +109,13 @@ function headShotSensitivity(score, dpi, rr, screen, gpuTier) {
 function getGraphics(score, ram, gpuTier, rr) {
     // 1. Base Preset by RAM
     let baseIndex = 0; // Smooth
-    if (ram > 6) baseIndex = 3; // MAX
-    else if (ram > 4) baseIndex = 2; // Ultra
-    else if (ram > 2) baseIndex = 1; // Standard
+    if (ram >= 6 && gpuTier >= 3) baseIndex = 3; // MAX
+    else if (ram >= 4) baseIndex = 2; // Ultra
+    else if (ram >= 3) baseIndex = 1; // Standard
 
     // 2. Processor Offset (If CPU/GPU is low, go back one step)
     let finalIndex = baseIndex;
-    if (gpuTier <= 2) {
+    if (gpuTier <= 1) {
         finalIndex = Math.max(0, baseIndex - 1);
     }
 
@@ -167,7 +164,7 @@ function validate({ cores, ram, rr, dpi, screen }) {
 function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
     const score = calculateScore(cores, gpuTier, ram, rr, dpi, screen);
     const tier = getDeviceTier(score);
-    const recDPI = recommendDPI(score);
+    const recDPI = recommendDPI(score, gpuTier);
     const sensi = headShotSensitivity(score, dpi, rr, screen, gpuTier);
     const gfx = getGraphics(score, ram, gpuTier, rr);
     const tips = getProTips(score, rr, dpi, recDPI, screen, gpuTier);
