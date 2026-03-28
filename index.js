@@ -180,7 +180,7 @@ function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
             hardware: raw.hardware || "Unknown"
         },
         deviceTier: tierLabel,
-        sensitivity: sens,
+        sensitivity: sensi,
         graphics: gfx,
         dpi: {
             current: dpi,
