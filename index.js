@@ -104,18 +104,33 @@ function headShotSensitivity(score, dpi, rr, screen, gpuTier) {
         redDot: clamp(general - 5, gMin - 10, gMax),
         scope2x: clamp(general - 11, gMin - 20, gMax - 5),
         scope4x: clamp(general - 20, gMin - 35, gMax - 12),
-        scope8x: clamp(general - 30, gMin - 50, gMax - 22),
+        freelock: clamp(general - 30, gMin - 50, gMax - 22),
         awmSniper: clamp(general - 40, gMin - 65, gMax - 32),
     };
 }
 
-function getGraphics(score, rr) {
-    if (score <= 20) return { preset: "Smooth", fps: "Low" };
-    if (score <= 33) return { preset: "Smooth", fps: "Medium" };
-    if (score <= 50) return { preset: "Smooth", fps: rr >= 90 ? "High" : "Medium" };
-    if (score <= 66) return { preset: "Standard", fps: "High" };
-    if (score <= 80) return { preset: "High", fps: rr >= 120 ? "Ultra" : "High" };
-    return { preset: "Ultra", fps: rr >= 120 ? "Extreme" : "Ultra" };
+function getGraphics(score, ram, gpuTier, rr) {
+    // 1. Base Preset by RAM
+    let baseIndex = 0; // Smooth
+    if (ram > 6) baseIndex = 3; // MAX
+    else if (ram > 4) baseIndex = 2; // Ultra
+    else if (ram > 2) baseIndex = 1; // Standard
+
+    // 2. Processor Offset (If CPU/GPU is low, go back one step)
+    let finalIndex = baseIndex;
+    if (gpuTier <= 2) {
+        finalIndex = Math.max(0, baseIndex - 1);
+    }
+
+    const presets = ["Smooth", "Standard", "Ultra", "MAX"];
+    const preset = presets[finalIndex];
+
+    // 3. FPS Logic (Normal, Enhanced, High)
+    let fps = "Normal";
+    if (score > 70 || (rr >= 90 && gpuTier >= 3)) fps = "High";
+    else if (score > 40 || gpuTier >= 2) fps = "Enhanced";
+
+    return { preset, fps };
 }
 
 function getProTips(score, rr, dpi, recDPI, screen, gpuTier) {
@@ -153,8 +168,8 @@ function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
     const score = calculateScore(cores, gpuTier, ram, rr, dpi, screen);
     const tier = getDeviceTier(score);
     const recDPI = recommendDPI(score);
-    const sens = headShotSensitivity(score, dpi, rr, screen, gpuTier);
-    const gfx = getGraphics(score, rr);
+    const sensi = headShotSensitivity(score, dpi, rr, screen, gpuTier);
+    const gfx = getGraphics(score, ram, gpuTier, rr);
     const tips = getProTips(score, rr, dpi, recDPI, screen, gpuTier);
     const tierLabel = { low: "Low-End", medium: "Mid-Range", high: "High-End" }[tier];
 
