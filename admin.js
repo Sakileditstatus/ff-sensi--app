@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-// We'll require the models from index.js or just re-define them here if they are in the same project
-const Senci = mongoose.model("Senci");
-const Slider = mongoose.model("Slider");
-const Vote = mongoose.model("Vote");
+const { Senci, Vote, Slider } = require("./models");
 
 // 1. GET ALL DATA (Dashboard Overview)
 router.get("/all", async (req, res) => {
