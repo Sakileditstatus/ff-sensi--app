@@ -1,14 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-const app = express();
-
-app.use(express.json());
-
 const config = require("./config");
 const { Senci, Vote, Slider, Device } = require("./models");
 
-const path = require("path");
+const app = express();
+app.use(express.json());
 
 // --- Helper: Track Device ---
 async function trackDevice(deviceId) {
@@ -19,16 +16,6 @@ async function trackDevice(deviceId) {
         await Senci.findOneAndUpdate({}, { $inc: { hits: 1 } }, { upsert: true });
     } catch(e) { console.error("Tracking Error", e); }
 }
-
-app.get("/admin-panel", (req, res) => {
-    res.sendFile(path.join(__dirname, "admin.html"));
-});
-
-app.get("/track", (req, res) => {
-    const { deviceId } = req.query;
-    if (deviceId) trackDevice(deviceId);
-    res.json({ success: true, message: "Visit tracked" });
-});
 
 // MongoDB Connection
 const MONGO_URI = config.MONGO_URI;
@@ -377,6 +364,12 @@ app.use("/admin", adminRouter);
 
 app.get("/admin-panel", (req, res) => {
     res.sendFile(path.join(__dirname, "admin.html"));
+});
+
+app.get("/track", (req, res) => {
+    const { deviceId } = req.query;
+    if (deviceId) trackDevice(deviceId);
+    res.json({ success: true, message: "Visit tracked" });
 });
 
 // ═══ VOTING SYSTEM ROUTES ═══
