@@ -392,12 +392,20 @@
             return { 'Authorization': localStorage.getItem('adminToken') || '' };
         }
 
+        function decodePayload(raw) {
+            if (raw && raw.payload) {
+                const bytes = Uint8Array.from(atob(raw.payload), c => c.charCodeAt(0));
+                return JSON.parse(new TextDecoder().decode(bytes));
+            }
+            return raw;
+        }
+
         async function fetchData() {
             try {
                 const res = await fetch(`${BASE_URL}/admin/all`, { 
                     headers: { ...getAuthHeader() } 
                 });
-                const data = await res.json();
+                const data = decodePayload(await res.json());
                 document.getElementById('votesTotal').innerText = data.votes.total;
                 document.getElementById('slidersCount').innerText = data.sliders.length;
                 document.getElementById('devicesCount').innerText = data.devicesCount || 0;
@@ -524,7 +532,7 @@
         async function fetchDialog() {
             try {
                 const res = await fetch(`${BASE_URL}/admin/dialog/get`, { headers: getAuthHeader() });
-                const d = await res.json();
+                const d = decodePayload(await res.json());
                 document.getElementById('alertTitle').value = d.title || '';
                 document.getElementById('alertMessage').value = d.message || '';
                 document.getElementById('btn1Name').value = d.btn1Name || '';
