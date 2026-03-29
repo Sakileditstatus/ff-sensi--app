@@ -143,6 +143,18 @@
                                 <input type="text" id="desktopLink" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 font-semibold focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
                             </div>
                         </div>
+
+                        <!-- Pro Tips Editor -->
+                        <div class="space-y-3 bg-amber-50/60 border border-amber-100 p-4 rounded-2xl">
+                            <p class="text-[9px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-1">🔥 PRO TIPS (Shown in app)</p>
+                            <div class="space-y-2">
+                                <input type="text" id="tip1" class="w-full bg-white border border-amber-100 rounded-xl p-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-amber-400" placeholder="Tip 1">
+                                <input type="text" id="tip2" class="w-full bg-white border border-amber-100 rounded-xl p-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-amber-400" placeholder="Tip 2">
+                                <input type="text" id="tip3" class="w-full bg-white border border-amber-100 rounded-xl p-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-amber-400" placeholder="Tip 3">
+                                <input type="text" id="tip4" class="w-full bg-white border border-amber-100 rounded-xl p-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-amber-400" placeholder="Tip 4">
+                            </div>
+                        </div>
+
                         <button type="submit" class="w-full bg-[#007AFF] text-white font-bold py-4 rounded-2xl btn-ios shadow-lg shadow-blue-500/20 active:bg-blue-600">
                             Update All Links
                         </button>
@@ -413,6 +425,10 @@
                     document.getElementById('iosLink').value = data.links.ios || '';
                     document.getElementById('paidLink').value = data.links.paid || '';
                     document.getElementById('desktopLink').value = data.links.desktop || '';
+                    document.getElementById('tip1').value = data.links.tip1 || '';
+                    document.getElementById('tip2').value = data.links.tip2 || '';
+                    document.getElementById('tip3').value = data.links.tip3 || '';
+                    document.getElementById('tip4').value = data.links.tip4 || '';
                 }
                 renderSliders(data.sliders);
                 fetchHealth();
@@ -471,7 +487,13 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
                 body: JSON.stringify({
-                    ios: document.getElementById('iosLink').value, paid: document.getElementById('paidLink').value, desktop: document.getElementById('desktopLink').value
+                    ios: document.getElementById('iosLink').value,
+                    paid: document.getElementById('paidLink').value,
+                    desktop: document.getElementById('desktopLink').value,
+                    tip1: document.getElementById('tip1').value,
+                    tip2: document.getElementById('tip2').value,
+                    tip3: document.getElementById('tip3').value,
+                    tip4: document.getElementById('tip4').value
                 })
             });
             if(res.ok) {
