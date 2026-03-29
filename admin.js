@@ -4,6 +4,16 @@ const mongoose = require("mongoose");
 
 const { Senci, Vote, Slider } = require("./models");
 
+// 0. ADMIN LOGIN API
+router.post("/login", (req, res) => {
+    const { email, password } = req.body;
+    if (email === "alphasensi@gmail.com" && password === "enzosrs@0909") {
+        res.json({ success: true, token: "ADMIN_SECURE_TOKEN_2026" });
+    } else {
+        res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+});
+
 // 1. GET ALL DATA (Dashboard Overview)
 router.get("/all", async (req, res) => {
     try {
