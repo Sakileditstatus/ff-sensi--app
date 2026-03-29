@@ -1,11 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const app = express();
+
+app.use(express.json());
+
 const config = require("./config");
 const { Senci, Vote, Slider, Device, Dialog } = require("./models");
-
-const app = express();
-app.use(express.json());
 
 // --- Helper: Track Device ---
 async function trackDevice(deviceId) {
@@ -15,6 +16,12 @@ async function trackDevice(deviceId) {
         }
         await Senci.findOneAndUpdate({}, { $inc: { hits: 1 } }, { upsert: true });
     } catch(e) { console.error("Tracking Error", e); }
+}
+
+// --- Security Obfuscation Wrapper ---
+function sendPayload(res, data) {
+    const rawData = JSON.stringify(data);
+    res.json({ payload: Buffer.from(rawData).toString("base64") });
 }
 
 // MongoDB Connection
@@ -28,10 +35,10 @@ app.use(async (req, res, next) => {
                 serverSelectionTimeoutMS: 5000,
                 dbName: 'senci'
             });
-            console.log("Live: Re-connected to MongoDB");
+            console.log("✅ Live: Re-connected to MongoDB");
         }
     } catch (err) {
-        console.error("DB Middleware Error:", err.message);
+        console.error("❌ DB Middleware Error:", err.message);
     }
     next();
 });
@@ -42,7 +49,7 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    
+
     // Handle preflight (OPTIONS)
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
@@ -111,7 +118,7 @@ function dpiAdvice(current, recommended) {
     const s = dpiStatus(current, recommended);
     if (s === "optimal") return `DPI ${current} is perfect. No change needed.`;
     if (s === "too_low") return `DPI ${current} is too low. Raise to ${recommended} for smoother tracking.`;
-    return `DPI ${current} is too high - causes shaky aim. Lower to ${recommended}.`;
+    return `DPI ${current} is too high — causes shaky aim. Lower to ${recommended}.`;
 }
 
 function headShotSensitivity(score, dpi, rr, screen, gpuTier) {
@@ -124,9 +131,9 @@ function headShotSensitivity(score, dpi, rr, screen, gpuTier) {
     else fine = Math.round(normalize(score, 67, 100) * 10);
 
     let baseGen;
-    if (tier === "low") baseGen = 200 - fine; 
-    else if (tier === "medium") baseGen = 190 - fine; 
-    else baseGen = 180 - fine; 
+    if (tier === "low") baseGen = 200 - fine;
+    else if (tier === "medium") baseGen = 190 - fine;
+    else baseGen = 180 - fine;
 
     // Adjustments
     const dpiComp = clamp(Math.round((recDPI - dpi) / 30), -6, 6);
@@ -175,25 +182,25 @@ function getGraphics(score, ram, gpuTier, rr) {
 function getProTips(score, rr, dpi, recDPI, screen, gpuTier) {
     const tips = [];
     const tier = getDeviceTier(score);
-    
+
     tips.push("AI Analysis: AI optimized headshot settings.");
     tips.push("Fire Button: Set size at 45% for perfect drag.");
     tips.push("Practice: 1-2 hours training ground for result.");
     tips.push("Paid Sensi: Tap for VIP Premium settings.");
 
-    tips.push("Niche se upar drag karo - feet se head tak.");
-    
-    if (rr >= 120) tips.push(`${rr}Hz screen - Graphics Ultra set karo.`);
-    else if (rr >= 90) tips.push(`${rr}Hz screen - sensitivity thodi high rakho.`);
-    
-    if (screen >= 6.5) tips.push("Bada screen - 4x scope drag headshot easy hoga.");
-    if (gpuTier >= 3) tips.push("Hardware strong - HDR mode on karo.");
-    
+    tips.push("Niche se upar drag karo — feet se head tak.");
+
+    if (rr >= 120) tips.push(`${rr}Hz screen — Graphics Ultra set karo.`);
+    else if (rr >= 90) tips.push(`${rr}Hz screen — sensitivity thodi high rakho.`);
+
+    if (screen >= 6.5) tips.push("Bada screen — 4x scope drag headshot easy hoga.");
+    if (gpuTier >= 3) tips.push("Hardware strong — HDR mode on karo.");
+
     if (tier === "low") {
-        tips.push("Background apps band karo - RAM free karo.");
-        tips.push("Phone thanda rakho - thermal throttle avoid karo.");
+        tips.push("Background apps band karo — RAM free karo.");
+        tips.push("Phone thanda rakho — thermal throttle avoid karo.");
     }
-    
+
     return tips;
 }
 
@@ -239,7 +246,7 @@ async function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw })
     if (!links) links = new Senci(); // Use schema defaults
     out.links = { ios: links.ios, paid: links.paid, desktop: links.desktop };
 
-    return res.json(out);
+    return sendPayload(res, out);
 }
 
 // ═══ ROUTES ═══
@@ -256,7 +263,7 @@ app.get("/", (_req, res) => {
 app.get("/sensi", (req, res) => {
     const { cores, ram, rr, dpi, screen, gpu_name, hardware, model, deviceId } = req.query;
     if(deviceId) trackDevice(deviceId);
-    
+
     const parsed = {
         cores: parseVal(cores),
         ram: parseVal(ram),
@@ -276,7 +283,7 @@ app.get("/sensi", (req, res) => {
 app.post("/sensi", (req, res) => {
     const { cores, ram, rr, dpi, screen, gpu_name, hardware, model, deviceId } = req.body || {};
     if(deviceId) trackDevice(deviceId);
-    
+
     const parsed = {
         cores: parseVal(cores),
         ram: parseVal(ram),
@@ -301,12 +308,12 @@ app.get("/db-status", async (_req, res) => {
     try {
         const data = await Senci.findOne();
         if (data) {
-            res.json({ status: "Success", message: "Data is saved in DB!", data });
+            res.json({ status: "Success ✅", message: "Data is saved in DB!", data });
         } else {
-            res.json({ status: "Empty", message: "DB connected but no data record yet. Visit /init-db to fix this." });
+            res.json({ status: "Empty ⚠️", message: "DB connected but no data record yet. Visit /init-db to fix this." });
         }
     } catch (err) {
-        res.status(500).json({ status: "Error", message: "DB Error: " + err.message });
+        res.status(500).json({ status: "Error ❌", message: "DB Error: " + err.message });
     }
 });
 
@@ -315,12 +322,12 @@ app.get("/init-db", async (_req, res) => {
         let data = await Senci.findOne();
         if (!data) {
             data = await new Senci().save();
-            res.json({ status: "Initialized", message: "Default links saved for the first time!", data });
+            res.json({ status: "Initialized 💾", message: "Default links saved for the first time!", data });
         } else {
-            res.json({ status: "Existing", message: "Database already has a record. No changes made.", data });
+            res.json({ status: "Existing 📁", message: "Database already has a record. No changes made.", data });
         }
     } catch (err) {
-        res.status(500).json({ status: "Error", message: "DB Init Error: " + err.message });
+        res.status(500).json({ status: "Error ❌", message: "DB Init Error: " + err.message });
     }
 });
 
@@ -349,11 +356,11 @@ app.post("/update-links", async (req, res) => {
     const { ios, paid, desktop } = req.body;
     let config = await Senci.findOne();
     if (!config) config = new Senci();
-    
+
     if (ios) config.ios = ios;
     if (paid) config.paid = paid;
     if (desktop) config.desktop = desktop;
-    
+
     await config.save();
     res.json({ message: "Links updated", config });
 });
@@ -362,7 +369,7 @@ app.post("/update-links", async (req, res) => {
 const adminRouter = require("./admin");
 app.use("/admin", adminRouter);
 
-app.get("/admin-panel", (req, res) => {
+app.get("/admin", (req, res) => {
     res.sendFile(path.join(__dirname, "admin.html"));
 });
 
@@ -392,15 +399,26 @@ app.get("/vote-stats", async (_req, res) => {
         const total = await Vote.countDocuments();
         const working = await Vote.countDocuments({ voteType: 'working' });
         const notWorking = total - working;
-        
+
         const workingPercent = total > 0 ? (working / total * 100).toFixed(1) : "0";
         const notWorkingPercent = total > 0 ? (notWorking / total * 100).toFixed(1) : "0";
-        
-        res.json({ 
-            workingPercent: workingPercent + "%", 
-            notWorkingPercent: notWorkingPercent + "%", 
-            total 
+
+        sendPayload(res, {
+            workingPercent: workingPercent + "%",
+            notWorkingPercent: notWorkingPercent + "%",
+            total
         });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ═══ SLIDER ROUTES ═══
+
+app.get("/sliders", async (_req, res) => {
+    try {
+        const sliders = await Slider.find();
+        res.json(sliders);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -413,28 +431,17 @@ app.get("/dialog", async (req, res) => {
         const { version } = req.query;
         let d = await Dialog.findOne({ active: true });
         
-        if (!d) return res.json({ show: false });
+        if (!d) return sendPayload(res, { show: false });
         
         // Version Check: If targetVersions is empty = All Versions
         if (d.targetVersions && d.targetVersions.length > 0 && version) {
             const matches = d.targetVersions.includes(version);
-            if (!matches) return res.json({ show: false });
+            if (!matches) return sendPayload(res, { show: false });
         }
         
-        res.json({ show: true, dialog: d });
+        sendPayload(res, { show: true, dialog: d });
     } catch (e) { 
         res.status(500).json({ error: e.message }); 
-    }
-});
-
-// ═══ SLIDER ROUTES ═══
-
-app.get("/sliders", async (_req, res) => {
-    try {
-        const sliders = await Slider.find();
-        res.json(sliders);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
     }
 });
 
@@ -465,7 +472,7 @@ app.get("/init", async (req, res) => {
             }
         }
 
-        res.json({
+        sendPayload(res, {
             sliders: sliders,
             dialog: dialogPayload
         });
@@ -478,5 +485,5 @@ module.exports = app;
 
 if (require.main === module) {
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log(`Alpha Sensi API v1.0 - http://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`Alpha Sensi API v1.0 → http://localhost:${PORT}`));
 }
