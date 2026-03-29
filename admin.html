@@ -237,10 +237,12 @@
                                 <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">IS CANCELABLE?</p>
                                 <input type="checkbox" id="alertCancelable" class="w-4 h-4 text-blue-600 rounded">
                              </div>
-                             <div class="space-y-1.5">
+                             <div class="space-y-3 mt-4">
                                 <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">TARGET VERSIONS</p>
-                                <input type="text" id="targetVersions" class="w-full bg-white p-3 rounded-xl text-xs font-mono" placeholder="Comma separated: 1.0.0, 1.0.2">
-                                <p class="text-[8px] text-gray-400 font-bold uppercase mt-1 italic leading-tight">*SHOWS ONLY ON THESE VERSIONS (EMPTY = ALL).</p>
+                                <div id="versionToggles" class="grid grid-cols-4 sm:grid-cols-5 gap-2">
+                                    <!-- Populated dynamically by JS -->
+                                </div>
+                                <p class="text-[8px] text-gray-400 font-bold uppercase italic leading-tight">*SELECT VERSIONS TO SHOW. UNSELECT ALL TO SHOW EVERYWHERE.</p>
                              </div>
                         </div>
 
@@ -372,6 +374,20 @@
         }
 
         // --- DATA ---
+        const APP_VERSIONS = ['1.0.0', '1.0.1', '1.0.2', '1.0.3', '1.0.4', '1.0.5', '1.0.6', '1.0.7', '1.0.8', '1.0.9', '1.1.0', '2.0.0'];
+
+        function renderVersionToggles(activeVersions = []) {
+            const container = document.getElementById('versionToggles');
+            container.innerHTML = APP_VERSIONS.map(v => `
+                <label class="cursor-pointer">
+                    <input type="checkbox" value="${v}" class="target-version-chk hidden peer" ${activeVersions.includes(v) ? 'checked' : ''}>
+                    <div class="px-1 py-1.5 rounded-lg border-2 border-gray-200 text-center text-xs font-bold text-gray-400 peer-checked:bg-blue-500 peer-checked:border-gray-200 peer-checked:text-white transition-all select-none shadow-sm peer-checked:shadow-md">
+                        ${v}
+                    </div>
+                </label>
+            `).join('');
+        }
+
         function getAuthHeader() {
             return { 'Authorization': localStorage.getItem('adminToken') || '' };
         }
@@ -515,7 +531,7 @@
                 document.getElementById('btn1Link').value = d.btn1Link || '';
                 document.getElementById('btn2Name').value = d.btn2Name || '';
                 document.getElementById('btn2Link').value = d.btn2Link || '';
-                document.getElementById('targetVersions').value = d.targetVersions ? d.targetVersions.join(', ') : '';
+                renderVersionToggles(d.targetVersions || []);
                 document.getElementById('alertActive').checked = d.active || false;
                 document.getElementById('alertCancelable').checked = d.isCancelable || false;
             } catch (e) { }
@@ -535,7 +551,7 @@
                     btn1Link: document.getElementById('btn1Link').value,
                     btn2Name: document.getElementById('btn2Name').value,
                     btn2Link: document.getElementById('btn2Link').value,
-                    targetVersions: document.getElementById('targetVersions').value,
+                    targetVersions: Array.from(document.querySelectorAll('.target-version-chk:checked')).map(cb => cb.value),
                     active: document.getElementById('alertActive').checked,
                     isCancelable: document.getElementById('alertCancelable').checked
                 })
