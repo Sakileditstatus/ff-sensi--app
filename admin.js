@@ -4,7 +4,17 @@ const mongoose = require("mongoose");
 
 const { Senci, Vote, Slider, Device } = require("./models");
 
-// 0. ADMIN LOGIN API
+// --- AUTH MIDDLEWARE (Protect all admin routes) ---
+const checkAuth = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if (authHeader === "ADMIN_SECURE_TOKEN_2026") {
+        next();
+    } else {
+        res.status(403).json({ error: "🔒 UNAUTHORIZED: ADMIN ACCESS ONLY" });
+    }
+};
+
+// 0. ADMIN LOGIN API (No auth needed)
 router.post("/login", (req, res) => {
     const { email, password } = req.body;
     if (email === "alphasensi@gmail.com" && password === "enzosrs@0909") {
@@ -13,6 +23,9 @@ router.post("/login", (req, res) => {
         res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 });
+
+// Protect all following routes with middleware
+router.use(checkAuth);
 
 // 1. GET ALL DATA (Dashboard Overview)
 router.get("/all", async (req, res) => {
