@@ -1,0 +1,22 @@
+{
+  "name": "SENCI Performance Matrix",
+  "short_name": "SENCI",
+  "description": "Professional Hardware Optimization and Performance Matrix Engine.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#007AFF",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/10044/10044561.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/10044/10044561.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "portrait"
+}
