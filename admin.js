@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const { Senci, Vote, Slider } = require("./models");
+const { Senci, Vote, Slider, Device } = require("./models");
 
 // 0. ADMIN LOGIN API
 router.post("/login", (req, res) => {
@@ -20,6 +20,8 @@ router.get("/all", async (req, res) => {
         const links = await Senci.findOne();
         const sliders = await Slider.find();
         const votes = await Vote.find();
+        const devicesCount = await Device.countDocuments();
+        const totalHits = links ? (links.hits || 0) : 0;
         
         const working = votes.filter(v => v.voteType === 'working').length;
         const total = votes.length;
@@ -27,6 +29,8 @@ router.get("/all", async (req, res) => {
         res.json({
             links,
             sliders,
+            devicesCount,
+            totalHits,
             votes: {
                 total,
                 working,
