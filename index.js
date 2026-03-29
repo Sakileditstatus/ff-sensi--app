@@ -1,6 +1,24 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
+
 app.use(express.json());
+
+// MongoDB Connection
+const MONGO_URI = "mongodb+srv://enzosrs:enzosrs%40123@cluster0.2aufqmu.mongodb.net/?appName=Cluster0";
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("✅ Connected to MongoDB (Cluster0)"))
+    .catch(err => console.error("❌ MongoDB connection error:", err));
+
+// Schema for Senci Links (Stored in DB)
+const SenciSchema = new mongoose.Schema({
+    ios: { type: String, default: "https://apple.com" },
+    paid: { type: String, default: "https://paidlink.com" },
+    desktop: { type: String, default: "https://desktoplink.com" }
+});
+const Senci = mongoose.model("Senci", SenciSchema);
+
+
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -119,7 +137,7 @@ function getGraphics(score, ram, gpuTier, rr) {
         finalIndex = Math.max(0, baseIndex - 1);
     }
 
-    const presets = ["Smooth", "Standard", "Ultra", "MAX"];
+    const presets = ["Smooth", "Standard", "High", "Ultra"];
     const preset = presets[finalIndex];
 
     // 3. FPS Logic (Normal, Enhanced, High)
@@ -133,21 +151,25 @@ function getGraphics(score, ram, gpuTier, rr) {
 function getProTips(score, rr, dpi, recDPI, screen, gpuTier) {
     const tips = [];
     const tier = getDeviceTier(score);
-    tips.push("Niche se upar drag karo — feet se head tak. Yahi real headshot motion hai.");
-    if (rr >= 120) tips.push(`${rr}Hz screen — FPS Ultra/Extreme set karo.`);
+    
+    tips.push("AI Analysis: AI optimized headshot settings.");
+    tips.push("Fire Button: Set size at 45% for perfect drag.");
+    tips.push("Practice: 1-2 hours training ground for result.");
+    tips.push("Paid Sensi: Tap for VIP Premium settings.");
+
+    tips.push("Niche se upar drag karo — feet se head tak.");
+    
+    if (rr >= 120) tips.push(`${rr}Hz screen — Graphics Ultra set karo.`);
     else if (rr >= 90) tips.push(`${rr}Hz screen — sensitivity thodi high rakho.`);
-    else tips.push("60Hz screen pe Motion Blur OFF karo.");
-    const st = dpiStatus(dpi, recDPI);
-    if (st === "too_high") tips.push(`DPI ${dpi} zyada hai. ${recDPI} pe set karo.`);
-    if (st === "too_low") tips.push(`DPI ${dpi} kam hai. ${recDPI} pe raise karo.`);
+    
     if (screen >= 6.5) tips.push("Bada screen — 4x scope drag headshot easy hoga.");
-    if (gpuTier >= 3) tips.push("GPU/Hardware strong — HDR mode on karo.");
-    if (score >= 67) tips.push("4x Anti-Aliasing on karo — target clearly dikhega.");
+    if (gpuTier >= 3) tips.push("Hardware strong — HDR mode on karo.");
+    
     if (tier === "low") {
         tips.push("Background apps band karo — RAM free karo.");
-        tips.push("Phone thanda rakho — thermal throttle se aim shaky hoti hai.");
+        tips.push("Phone thanda rakho — thermal throttle avoid karo.");
     }
-    tips.push("Custom room mein drag practice karo — muscle memory se headshot rate badhti hai.");
+    
     return tips;
 }
 
@@ -161,7 +183,7 @@ function validate({ cores, ram, rr, dpi, screen }) {
     return errors;
 }
 
-function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
+async function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
     const score = calculateScore(cores, gpuTier, ram, rr, dpi, screen);
     const tier = getDeviceTier(score);
     const recDPI = recommendDPI(score, gpuTier);
@@ -170,7 +192,7 @@ function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
     const tips = getProTips(score, rr, dpi, recDPI, screen, gpuTier);
     const tierLabel = { low: "Low-End", medium: "Mid-Range", high: "High-End" }[tier];
 
-    return res.json({
+    const out = {
         deviceInfo: {
             cores, ram, rr, dpi, screen, gpuTier,
             model: raw.model || "Unknown",
@@ -186,7 +208,13 @@ function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
             advice: dpiAdvice(dpi, recDPI),
         },
         proTips: tips,
-    });
+    };
+
+    // Include links in the response from DB
+    const links = await Senci.findOne();
+    out.links = links || { ios: "", paid: "", desktop: "" };
+
+    return res.json(out);
 }
 
 // ═══ ROUTES ═══
@@ -194,7 +222,7 @@ function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw }) {
 app.get("/", (_req, res) => {
     res.json({
         name: "Alpha Sensi Headshot API",
-        version: "8.0.0",
+        version: "1.0",
         endpoint: "/sensi",
         params: ["cores", "ram", "rr", "dpi", "screen", "gpu_name", "hardware", "model"]
     });
@@ -239,8 +267,39 @@ app.post("/sensi", (req, res) => {
 });
 
 app.get("/health", (_req, res) => {
-    res.json({ status: "ok", version: "8.0.0", uptime: Math.round(process.uptime()) + "s" });
+    res.json({ status: "ok", version: "1.0", uptime: Math.round(process.uptime()) + "s" });
+});
+
+// ═══ NEW LINK ROUTES ═══
+
+app.get("/ios-link", async (_req, res) => {
+    const config = await Senci.findOne();
+    res.json({ url: config?.ios || "" });
+});
+
+app.get("/paid-link", async (_req, res) => {
+    const config = await Senci.findOne();
+    res.json({ url: config?.paid || "" });
+});
+
+app.get("/desktop-link", async (_req, res) => {
+    const config = await Senci.findOne();
+    res.json({ url: config?.desktop || "" });
+});
+
+// Route to update links (convenience)
+app.post("/update-links", async (req, res) => {
+    const { ios, paid, desktop } = req.body;
+    let config = await Senci.findOne();
+    if (!config) config = new Senci();
+    
+    if (ios) config.ios = ios;
+    if (paid) config.paid = paid;
+    if (desktop) config.desktop = desktop;
+    
+    await config.save();
+    res.json({ message: "Links updated", config });
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Alpha Sensi API v8.0 → http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Alpha Sensi API v1.0 → http://localhost:${PORT}`));
