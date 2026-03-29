@@ -387,7 +387,7 @@ app.post("/update-links", async (req, res) => {
 const adminRouter = require("./admin");
 app.use("/admin", adminRouter);
 
-app.get("/admin", (req, res) => {
+app.get("/admin-panel", (req, res) => {
     res.sendFile(path.join(__dirname, "admin.html"));
 });
 
