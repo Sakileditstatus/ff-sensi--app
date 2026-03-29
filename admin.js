@@ -58,7 +58,18 @@ router.post("/slider/add", async (req, res) => {
     }
 });
 
-// 4. DELETE SLIDER
+// 4. UPDATE SLIDER
+router.post("/slider/update", async (req, res) => {
+    const { id, ...updateData } = req.body;
+    try {
+        const updated = await Slider.findByIdAndUpdate(id, updateData, { new: true });
+        res.json({ message: "✅ Slider updated", slider: updated });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 5. DELETE SLIDER
 router.post("/slider/delete", async (req, res) => {
     const { id } = req.body;
     try {
