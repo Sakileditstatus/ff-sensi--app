@@ -67,7 +67,7 @@ app.use((req, res, next) => {
         if (req.headers['x-senci-auth'] !== 'SENSI_APP_VALID_2026' && req.headers['authorization'] !== 'ADMIN_SECURE_TOKEN_2026') {
             return res.status(403).json({
                 error: "Unauthorized Access",
-                message: "Access to this API is restricted.",
+                message: "Direct API access is restricted. Service currently unavailable.",
                 status: 403
             });
         }
@@ -197,14 +197,9 @@ function getGraphics(score, ram, gpuTier, rr) {
     return { preset, fps };
 }
 
-function getProTips(score, rr, dpi, recDPI, screen, gpuTier) {
-    const tips = [];
+function getProTips(score, rr, dpi, recDPI, screen, gpuTier, dbTips = []) {
+    const tips = [...dbTips]; // DB-driven top tips first
     const tier = getDeviceTier(score);
-
-    tips.push("AI Analysis: AI optimized headshot settings.");
-    tips.push("Fire Button: Set size at 45% for perfect drag.");
-    tips.push("Practice: 1-2 hours training ground for result.");
-    tips.push("Paid Sensi: Tap for VIP Premium settings.");
 
     tips.push("Niche se upar drag karo — feet se head tak.");
 
@@ -238,8 +233,14 @@ async function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw })
     const recDPI = recommendDPI(score, gpuTier);
     const sensi = headShotSensitivity(score, dpi, rr, screen, gpuTier);
     const gfx = getGraphics(score, ram, gpuTier, rr);
-    const tips = getProTips(score, rr, dpi, recDPI, screen, gpuTier);
     const tierLabel = { low: "Low-End", medium: "Mid-Range", high: "High-End" }[tier];
+
+    // Fetch links & DB tips
+    let config = await Senci.findOne();
+    if (!config) config = new Senci();
+
+    const dbTips = [config.tip1, config.tip2, config.tip3, config.tip4].filter(Boolean);
+    const tips = getProTips(score, rr, dpi, recDPI, screen, gpuTier, dbTips);
 
     const out = {
         deviceInfo: {
@@ -257,12 +258,8 @@ async function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw })
             advice: dpiAdvice(dpi, recDPI),
         },
         proTips: tips,
+        links: { ios: config.ios, paid: config.paid, desktop: config.desktop }
     };
-
-    // Include links in the response from DB
-    let links = await Senci.findOne();
-    if (!links) links = new Senci(); // Use schema defaults
-    out.links = { ios: links.ios, paid: links.paid, desktop: links.desktop };
 
     return sendPayload(res, out);
 }
