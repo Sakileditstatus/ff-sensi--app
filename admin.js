@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const { Senci, Vote, Slider, Device } = require("./models");
+const { Senci, Vote, Slider, Device, Dialog } = require("./models");
 
 // --- AUTH MIDDLEWARE (Protect all admin routes) ---
 const checkAuth = (req, res, next) => {
