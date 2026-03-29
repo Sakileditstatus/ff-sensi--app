@@ -1,51 +1,176 @@
+const express = require("express");
+const router = express.Router();
 const mongoose = require("mongoose");
 
-const SenciSchema = new mongoose.Schema({
-    ios: { type: String, default: "https://apple.com" },
-    paid: { type: String, default: "https://paidlink.com" },
-    desktop: { type: String, default: "https://desktoplink.com" },
-    hits: { type: Number, default: 0 },
-    tip1: { type: String, default: "AI Analysis: AI optimized headshot settings." },
-    tip2: { type: String, default: "Fire Button: Set size at 45% for perfect drag." },
-    tip3: { type: String, default: "Practice: 1-2 hours training ground for result." },
-    tip4: { type: String, default: "Paid Sensi: Tap for VIP Premium settings." }
-});
+const { Senci, Vote, Slider, Device, Dialog } = require("./models");
 
-const VoteSchema = new mongoose.Schema({
-    deviceId: { type: String, unique: true },
-    voteType: { type: String, enum: ['working', 'not_working'] }
-});
-
-const SliderSchema = new mongoose.Schema({
-    image_url: String,
-    title: String,
-    subtitle: String,
-    badge: String,
-    button_text: String,
-    button_url: String
-});
-
-const DeviceSchema = new mongoose.Schema({
-    deviceId: { type: String, unique: true },
-    lastVisit: { type: Date, default: Date.now }
-});
-
-const DialogSchema = new mongoose.Schema({
-    title: { type: String, default: "New Update Available" },
-    message: { type: String, default: "Please download the latest version for the best experience." },
-    btn1Name: { type: String, default: "Download" },
-    btn1Link: { type: String, default: "" },
-    btn2Name: { type: String, default: "Later" },
-    btn2Link: { type: String, default: "" },
-    isCancelable: { type: Boolean, default: true },
-    targetVersions: { type: [String], default: [] }, // Empty = All Versions
-    active: { type: Boolean, default: false }
-});
-
-module.exports = {
-    Senci: mongoose.models.Senci || mongoose.model("Senci", SenciSchema),
-    Vote: mongoose.models.Vote || mongoose.model("Vote", VoteSchema),
-    Slider: mongoose.models.Slider || mongoose.model("Slider", SliderSchema),
-    Device: mongoose.models.Device || mongoose.model("Device", DeviceSchema),
-    Dialog: mongoose.models.Dialog || mongoose.model("Dialog", DialogSchema)
+// --- AUTH MIDDLEWARE (Protect all admin routes) ---
+const checkAuth = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if (authHeader === "ADMIN_SECURE_TOKEN_2026") {
+        next();
+    } else {
+        res.status(403).json({ error: "UNAUTHORIZED: ADMIN ACCESS ONLY" });
+    }
 };
+
+// --- Security Obfuscation Wrapper ---
+function sendPayload(res, data) {
+    const rawData = JSON.stringify(data);
+    res.json({ payload: Buffer.from(rawData).toString("base64") });
+}
+
+// 0. ADMIN LOGIN API (No auth needed)
+router.post("/login", (req, res) => {
+    const { email, password } = req.body;
+    if (email === "alphasensi@gmail.com" && password === "enzosrs@0909") {
+        res.json({ success: true, token: "ADMIN_SECURE_TOKEN_2026" });
+    } else {
+        res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+});
+
+// Protect all following routes with middleware
+router.use(checkAuth);
+
+// 1. GET ALL DATA (Dashboard Overview)
+router.get("/all", async (req, res) => {
+    try {
+        // Find existing or fallback to empty
+        const links = await Senci.findOne() || { ios: "", paid: "", desktop: "", hits: 0 };
+        const sliders = await Slider.find() || [];
+        const votes = await Vote.find() || [];
+        
+        // Count unique devices (safety for new models)
+        let devicesCount = 0;
+        try {
+            devicesCount = await Device.countDocuments();
+        } catch (e) { console.log("Device Tracking not initialized yet"); }
+
+        const totalHits = links ? (links.hits || 0) : 0;
+        const working = votes.filter(v => v && v.voteType === 'working').length;
+        const total = votes.length;
+
+        sendPayload(res, {
+            links,
+            sliders,
+            devicesCount,
+            totalHits,
+            votes: {
+                total,
+                working,
+                notWorking: total - working,
+                workingPercent: total > 0 ? (working / total * 100).toFixed(1) + "%" : "0%"
+            }
+        });
+    } catch (err) {
+        console.error("ADMIN ALL ERROR:", err);
+        res.status(500).json({ status: "error", message: err.message });
+    }
+});
+
+// 2. UPDATE LINKS
+router.post("/update-links", async (req, res) => {
+    const { ios, paid, desktop, tip1, tip2, tip3, tip4 } = req.body;
+    try {
+        let config = await Senci.findOne();
+        if (!config) config = new Senci();
+        
+        if (ios !== undefined) config.ios = ios;
+        if (paid !== undefined) config.paid = paid;
+        if (desktop !== undefined) config.desktop = desktop;
+        if (tip1 !== undefined) config.tip1 = tip1;
+        if (tip2 !== undefined) config.tip2 = tip2;
+        if (tip3 !== undefined) config.tip3 = tip3;
+        if (tip4 !== undefined) config.tip4 = tip4;
+        
+        await config.save();
+        res.json({ message: "Links updated successfully", config });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 3. ADD SLIDER
+router.post("/slider/add", async (req, res) => {
+    try {
+        const newSlider = new Slider(req.body);
+        await newSlider.save();
+        res.json({ message: "Slider added", slider: newSlider });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 4. UPDATE SLIDER
+router.post("/slider/update", async (req, res) => {
+    const { id, ...updateData } = req.body;
+    try {
+        const updated = await Slider.findByIdAndUpdate(id, updateData, { new: true });
+        res.json({ message: "Slider updated", slider: updated });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 5. DELETE SLIDER
+router.post("/slider/delete", async (req, res) => {
+    const { id } = req.body;
+    try {
+        await Slider.findByIdAndDelete(id);
+        res.json({ message: "Slider deleted" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 5. RESET VOTES
+router.post("/reset-votes", async (req, res) => {
+    try {
+        await Vote.deleteMany({});
+        res.json({ message: "All votes cleared!" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 6. DIALOG MANAGEMENT
+router.get("/dialog/get", async (req, res) => {
+    try {
+        let d = await Dialog.findOne();
+        if(!d) d = new Dialog();
+        sendPayload(res, d);
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.post("/dialog/update", async (req, res) => {
+    try {
+        const { title, message, btn1Name, btn1Link, btn2Name, btn2Link, isCancelable, targetVersions, active } = req.body;
+        
+        // Target versions should be an array
+        let versions = [];
+        if (typeof targetVersions === "string") {
+            versions = targetVersions.split(",").map(v => v.trim()).filter(v => v);
+        } else if (Array.isArray(targetVersions)) {
+            versions = targetVersions;
+        }
+
+        let d = await Dialog.findOne();
+        if(!d) d = new Dialog();
+
+        d.title = title;
+        d.message = message;
+        d.btn1Name = btn1Name;
+        d.btn1Link = btn1Link;
+        d.btn2Name = btn2Name;
+        d.btn2Link = btn2Link;
+        d.isCancelable = isCancelable;
+        d.targetVersions = versions;
+        d.active = active;
+
+        await d.save();
+        res.json({ message: "Dialog updated", dialog: d });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+module.exports = router;
