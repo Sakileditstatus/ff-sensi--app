@@ -1,8 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const app = express();
 
 app.use(express.json());
+
+const config = require("./config");
 
 // Schema for Senci Links (Stored in DB)
 const SenciSchema = new mongoose.Schema({
@@ -12,8 +15,26 @@ const SenciSchema = new mongoose.Schema({
 });
 const Senci = mongoose.model("Senci", SenciSchema);
 
+// Schema for Votes
+const VoteSchema = new mongoose.Schema({
+    deviceId: { type: String, unique: true },
+    voteType: { type: String, enum: ['working', 'not_working'] }
+});
+const Vote = mongoose.model("Vote", VoteSchema);
+
+// Schema for Image Sliders
+const SliderSchema = new mongoose.Schema({
+    image_url: String,
+    title: String,
+    subtitle: String,
+    badge: String,
+    button_text: String,
+    button_url: String
+});
+const Slider = mongoose.model("Slider", SliderSchema);
+
 // MongoDB Connection
-const MONGO_URI = "mongodb+srv://enzosrs:enzosrs%40123@cluster0.2aufqmu.mongodb.net/senci?appName=Cluster0";
+const MONGO_URI = config.MONGO_URI;
 mongoose.connect(MONGO_URI)
     .then(async () => {
         console.log("✅ Connected to MongoDB (Cluster0)");
@@ -22,6 +43,30 @@ mongoose.connect(MONGO_URI)
         if (!exists) {
             await new Senci().save();
             console.log("💾 Default links saved to Database!");
+        }
+
+        // Initialize default Sliders if they don't exist
+        const sliderExists = await Slider.findOne();
+        if (!sliderExists) {
+            await Slider.insertMany([
+                {
+                    image_url: 'https://images.unsplash.com/photo-1614850523296-e8c1d07ed7a9?auto=format&fit=crop&w=800&q=80',
+                    title: 'Premium MODs',
+                    subtitle: 'Verified by Senci',
+                    badge: 'Hot',
+                    button_text: 'OPEN',
+                    button_url: 'https://google.com',
+                },
+                {
+                    image_url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
+                    title: 'Game Boost',
+                    subtitle: 'Ultra Performance',
+                    badge: 'MOD',
+                    button_text: 'GET',
+                    button_url: 'https://flutter.dev',
+                }
+            ]);
+            console.log("🖼️ Default Sliders saved to Database!");
         }
     })
     .catch(err => console.error("❌ MongoDB connection error:", err));
@@ -338,6 +383,59 @@ app.post("/update-links", async (req, res) => {
     
     await config.save();
     res.json({ message: "Links updated", config });
+});
+
+// ═══ ADMIN ROUTES ═══
+const adminRouter = require("./admin");
+app.use("/admin", adminRouter);
+
+app.get("/admin-panel", (req, res) => {
+    res.sendFile(path.join(__dirname, "admin.html"));
+});
+
+// ═══ VOTING SYSTEM ROUTES ═══
+
+app.post("/vote", async (req, res) => {
+    const { deviceId, voteType } = req.body;
+    if (!deviceId || !['working', 'not_working'].includes(voteType)) {
+        return res.status(400).json({ error: "Invalid deviceId or voteType" });
+    }
+    try {
+        await Vote.findOneAndUpdate({ deviceId }, { voteType }, { upsert: true, new: true });
+        res.json({ message: "Vote recorded successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get("/vote-stats", async (_req, res) => {
+    try {
+        const total = await Vote.countDocuments();
+        const working = await Vote.countDocuments({ voteType: 'working' });
+        const notWorking = total - working;
+        
+        const workingPercent = total > 0 ? (working / total * 100).toFixed(1) : "0";
+        const notWorkingPercent = total > 0 ? (notWorking / total * 100).toFixed(1) : "0";
+        
+        res.json({ 
+            workingPercent: workingPercent + "%", 
+            notWorkingPercent: notWorkingPercent + "%", 
+            total 
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ═══ SLIDER ROUTES ═══
+
+app.get("/sliders", async (_req, res) => {
+    try {
+        const sliders = await Slider.find();
+        res.json(sliders);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 module.exports = app;
