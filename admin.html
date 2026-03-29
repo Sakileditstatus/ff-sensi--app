@@ -197,10 +197,63 @@
                     <p class="text-[9px] font-black text-gray-300 uppercase tracking-widest">© 2026 Alpha Sensi Solutions</p>
                 </footer>
             </div>
+            <!-- SECTION: ALERTS -->
+            <div id="section-alerts" class="page-section space-y-6 pb-10">
+                <div class="glass p-6 rounded-[32px] ios-shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold flex items-center gap-2 text-red-500"><i data-lucide="bell-ring" class="w-5 h-5"></i> Cloud Alerts</h3>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="alertActive" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                            <span class="ml-3 text-xs font-black uppercase text-gray-400 tracking-widest peer-checked:text-green-600">Active</span>
+                        </label>
+                    </div>
+                    
+                    <form id="alertForm" class="space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">DIALOG TITLE</label>
+                            <input type="text" id="alertTitle" class="w-full bg-gray-100 p-4 rounded-2xl font-bold outline-none" placeholder="Target Alert Title">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">ALERT MESSAGE</label>
+                            <textarea id="alertMessage" rows="3" class="w-full bg-gray-100 p-4 rounded-2xl font-semibold outline-none" placeholder="Write message..."></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-4 col-span-1">
+                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">LEFT BUTTON</label>
+                                <input type="text" id="btn1Name" class="w-full bg-gray-100 p-4 rounded-2xl font-bold outline-none" placeholder="Text">
+                                <input type="text" id="btn1Link" class="w-full bg-gray-100 p-4 rounded-2xl font-semibold outline-none" placeholder="Link">
+                            </div>
+                            <div class="space-y-4 col-span-1">
+                                <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">RIGHT BUTTON</label>
+                                <input type="text" id="btn2Name" class="w-full bg-gray-100 p-4 rounded-2xl font-bold outline-none" placeholder="Text">
+                                <input type="text" id="btn2Link" class="w-full bg-gray-100 p-4 rounded-2xl font-semibold outline-none" placeholder="Link">
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 bg-gray-50 p-4 rounded-2xl">
+                             <div class="flex items-center justify-between">
+                                <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">IS CANCELABLE?</p>
+                                <input type="checkbox" id="alertCancelable" class="w-4 h-4 text-blue-600 rounded">
+                             </div>
+                             <div class="space-y-1.5">
+                                <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest">TARGET VERSIONS</p>
+                                <input type="text" id="targetVersions" class="w-full bg-white p-3 rounded-xl text-xs font-mono" placeholder="Comma separated: 1.0.0, 1.0.2">
+                                <p class="text-[8px] text-gray-400 font-bold uppercase mt-1 italic leading-tight">*SHOWS ONLY ON THESE VERSIONS (EMPTY = ALL).</p>
+                             </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-black text-white py-4 rounded-2xl font-black btn-ios shadow-xl">
+                            Update Global Alert
+                        </button>
+                    </form>
+                </div>
+            </div>
         </main>
 
         <!-- BOTTOM TAB BAR -->
-        <nav class="tab-bar fixed bottom-0 left-0 right-0 h-16 grid grid-cols-4 items-center z-50 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+        <nav class="tab-bar fixed bottom-0 left-0 right-0 h-16 grid grid-cols-5 items-center z-50 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
             <button onclick="showSection('overview')" id="nav-overview" class="tab-item active btn-ios">
                 <i data-lucide="layout-grid"></i>
                 <span>Summary</span>
@@ -208,6 +261,10 @@
             <button onclick="showSection('links')" id="nav-links" class="tab-item btn-ios">
                 <i data-lucide="link"></i>
                 <span>Links</span>
+            </button>
+            <button onclick="showSection('alerts')" id="nav-alerts" class="tab-item btn-ios">
+                <i data-lucide="bell-ring"></i>
+                <span>Alerts</span>
             </button>
             <button onclick="showSection('banners')" id="nav-banners" class="tab-item btn-ios">
                 <i data-lucide="layers"></i>
@@ -309,7 +366,8 @@
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById('section-' + id).classList.add('active');
 
-            const titles = { overview: 'Dashboard', links: 'Redirects', banners: 'Slider Content', system: 'Infrastructure' };
+            const titles = { overview: 'Dashboard', links: 'Redirects', alerts: 'Cloud Alerts', banners: 'Slider Content', system: 'Infrastructure' };
+            if (id === 'alerts') fetchDialog();
             document.getElementById('pageTitle').innerText = titles[id];
         }
 
@@ -446,6 +504,47 @@
             });
             if(res.ok) fetchData();
         }
+
+        async function fetchDialog() {
+            try {
+                const res = await fetch(`${BASE_URL}/admin/dialog/get`, { headers: getAuthHeader() });
+                const d = await res.json();
+                document.getElementById('alertTitle').value = d.title || '';
+                document.getElementById('alertMessage').value = d.message || '';
+                document.getElementById('btn1Name').value = d.btn1Name || '';
+                document.getElementById('btn1Link').value = d.btn1Link || '';
+                document.getElementById('btn2Name').value = d.btn2Name || '';
+                document.getElementById('btn2Link').value = d.btn2Link || '';
+                document.getElementById('targetVersions').value = d.targetVersions ? d.targetVersions.join(', ') : '';
+                document.getElementById('alertActive').checked = d.active || false;
+                document.getElementById('alertCancelable').checked = d.isCancelable || false;
+            } catch (e) { }
+        }
+
+        document.getElementById('alertForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Pushing Update...";
+            const res = await fetch(`${BASE_URL}/admin/dialog/update`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+                body: JSON.stringify({
+                    title: document.getElementById('alertTitle').value,
+                    message: document.getElementById('alertMessage').value,
+                    btn1Name: document.getElementById('btn1Name').value,
+                    btn1Link: document.getElementById('btn1Link').value,
+                    btn2Name: document.getElementById('btn2Name').value,
+                    btn2Link: document.getElementById('btn2Link').value,
+                    targetVersions: document.getElementById('targetVersions').value,
+                    active: document.getElementById('alertActive').checked,
+                    isCancelable: document.getElementById('alertCancelable').checked
+                })
+            });
+            if(res.ok) {
+                btn.innerText = "Dialog Updated! ✅";
+                setTimeout(() => btn.innerText = "Update Global Alert", 2000);
+            }
+        });
 
         checkAuth();
     </script>
