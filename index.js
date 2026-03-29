@@ -301,5 +301,9 @@ app.post("/update-links", async (req, res) => {
     res.json({ message: "Links updated", config });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Alpha Sensi API v1.0 → http://localhost:${PORT}`));
+module.exports = app;
+
+if (require.main === module) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Alpha Sensi API v1.0 → http://localhost:${PORT}`));
+}
