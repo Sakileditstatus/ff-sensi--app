@@ -4,17 +4,7 @@ Device specs dalo → Real headshot sensitivity milegi.
 
 ---
 
-## 👑 1. Admin Dashboard (GUI)
-Use this for **easy point-and-click management** of links and banners.
-
-- **Main Dashboard**: [https://ff-sensi-app.vercel.app/](https://ff-sensi-app.vercel.app)
-  *   Manage App Links (iOS, Paid, Desktop)
-  *   Add/Edit/Delete Dynamic Banners
-  *   View Live System Health & Stats
-
----
-
-## 🛠️ 2. API Parameters
+## API Parameters
 
 | Param    | Type   | Required | Description |
 |----------|--------|----------|-------------|
@@ -103,20 +93,6 @@ curl -X POST https://your-api.vercel.app/sensi \
 ```json
 { "status": "ok", "version": "6.0.0", "uptime": "42s" }
 ```
-
----
-
-## 🏗️ 3. Admin API (Auth Required)
-You can use these directly or via the Dashboard:
-
-| Goal | Endpoint | Method |
-| :--- | :--- | :--- |
-| **Update Links** | `/admin/update-links` | `POST` |
-| **New Banner** | `/admin/slider/add` | `POST` |
-| **Edit Banner** | `/admin/slider/update` | `POST` |
-| **Delete Banner** | `/admin/slider/delete` | `POST` |
-| **Get All Stats** | `/admin/all` | `GET` |
-| **Seed DB** | `/init-db` | `GET` |
 
 ---
 
