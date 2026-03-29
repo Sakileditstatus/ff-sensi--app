@@ -4,7 +4,11 @@ const SenciSchema = new mongoose.Schema({
     ios: { type: String, default: "https://apple.com" },
     paid: { type: String, default: "https://paidlink.com" },
     desktop: { type: String, default: "https://desktoplink.com" },
-    hits: { type: Number, default: 0 }
+    hits: { type: Number, default: 0 },
+    tip1: { type: String, default: "AI Analysis: AI optimized headshot settings." },
+    tip2: { type: String, default: "Fire Button: Set size at 45% for perfect drag." },
+    tip3: { type: String, default: "Practice: 1-2 hours training ground for result." },
+    tip4: { type: String, default: "Paid Sensi: Tap for VIP Premium settings." }
 });
 
 const VoteSchema = new mongoose.Schema({
