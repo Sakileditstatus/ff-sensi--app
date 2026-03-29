@@ -7,31 +7,8 @@ app.use(express.json());
 
 const config = require("./config");
 
-// Schema for Senci Links (Stored in DB)
-const SenciSchema = new mongoose.Schema({
-    ios: { type: String, default: "https://apple.com" },
-    paid: { type: String, default: "https://paidlink.com" },
-    desktop: { type: String, default: "https://desktoplink.com" }
-});
-const Senci = mongoose.model("Senci", SenciSchema);
-
-// Schema for Votes
-const VoteSchema = new mongoose.Schema({
-    deviceId: { type: String, unique: true },
-    voteType: { type: String, enum: ['working', 'not_working'] }
-});
-const Vote = mongoose.model("Vote", VoteSchema);
-
-// Schema for Image Sliders
-const SliderSchema = new mongoose.Schema({
-    image_url: String,
-    title: String,
-    subtitle: String,
-    badge: String,
-    button_text: String,
-    button_url: String
-});
-const Slider = mongoose.model("Slider", SliderSchema);
+const config = require("./config");
+const { Senci, Vote, Slider } = require("./models");
 
 // MongoDB Connection
 const MONGO_URI = config.MONGO_URI;
