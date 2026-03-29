@@ -67,7 +67,7 @@ app.use((req, res, next) => {
         if (req.headers['x-senci-auth'] !== 'SENSI_APP_VALID_2026' && req.headers['authorization'] !== 'ADMIN_SECURE_TOKEN_2026') {
             return res.status(403).json({
                 error: "Unauthorized Access",
-                message: "Direct API access is restricted. Service currently unavailable.",
+                message: "Access to this API is restricted.",
                 status: 403
             });
         }
