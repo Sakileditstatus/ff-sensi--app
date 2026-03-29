@@ -6,8 +6,6 @@ const app = express();
 app.use(express.json());
 
 const config = require("./config");
-
-const config = require("./config");
 const { Senci, Vote, Slider } = require("./models");
 
 // MongoDB Connection
