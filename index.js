@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const config = require("./config");
-const { Senci, Vote, Slider, Device } = require("./models");
+const { Senci, Vote, Slider, Device, Dialog } = require("./models");
 
 const app = express();
 app.use(express.json());
@@ -28,10 +28,10 @@ app.use(async (req, res, next) => {
                 serverSelectionTimeoutMS: 5000,
                 dbName: 'senci'
             });
-            console.log("✅ Live: Re-connected to MongoDB");
+            console.log("Live: Re-connected to MongoDB");
         }
     } catch (err) {
-        console.error("❌ DB Middleware Error:", err.message);
+        console.error("DB Middleware Error:", err.message);
     }
     next();
 });
@@ -111,7 +111,7 @@ function dpiAdvice(current, recommended) {
     const s = dpiStatus(current, recommended);
     if (s === "optimal") return `DPI ${current} is perfect. No change needed.`;
     if (s === "too_low") return `DPI ${current} is too low. Raise to ${recommended} for smoother tracking.`;
-    return `DPI ${current} is too high — causes shaky aim. Lower to ${recommended}.`;
+    return `DPI ${current} is too high - causes shaky aim. Lower to ${recommended}.`;
 }
 
 function headShotSensitivity(score, dpi, rr, screen, gpuTier) {
@@ -181,17 +181,17 @@ function getProTips(score, rr, dpi, recDPI, screen, gpuTier) {
     tips.push("Practice: 1-2 hours training ground for result.");
     tips.push("Paid Sensi: Tap for VIP Premium settings.");
 
-    tips.push("Niche se upar drag karo — feet se head tak.");
+    tips.push("Niche se upar drag karo - feet se head tak.");
     
-    if (rr >= 120) tips.push(`${rr}Hz screen — Graphics Ultra set karo.`);
-    else if (rr >= 90) tips.push(`${rr}Hz screen — sensitivity thodi high rakho.`);
+    if (rr >= 120) tips.push(`${rr}Hz screen - Graphics Ultra set karo.`);
+    else if (rr >= 90) tips.push(`${rr}Hz screen - sensitivity thodi high rakho.`);
     
-    if (screen >= 6.5) tips.push("Bada screen — 4x scope drag headshot easy hoga.");
-    if (gpuTier >= 3) tips.push("Hardware strong — HDR mode on karo.");
+    if (screen >= 6.5) tips.push("Bada screen - 4x scope drag headshot easy hoga.");
+    if (gpuTier >= 3) tips.push("Hardware strong - HDR mode on karo.");
     
     if (tier === "low") {
-        tips.push("Background apps band karo — RAM free karo.");
-        tips.push("Phone thanda rakho — thermal throttle avoid karo.");
+        tips.push("Background apps band karo - RAM free karo.");
+        tips.push("Phone thanda rakho - thermal throttle avoid karo.");
     }
     
     return tips;
@@ -301,12 +301,12 @@ app.get("/db-status", async (_req, res) => {
     try {
         const data = await Senci.findOne();
         if (data) {
-            res.json({ status: "Success ✅", message: "Data is saved in DB!", data });
+            res.json({ status: "Success", message: "Data is saved in DB!", data });
         } else {
-            res.json({ status: "Empty ⚠️", message: "DB connected but no data record yet. Visit /init-db to fix this." });
+            res.json({ status: "Empty", message: "DB connected but no data record yet. Visit /init-db to fix this." });
         }
     } catch (err) {
-        res.status(500).json({ status: "Error ❌", message: "DB Error: " + err.message });
+        res.status(500).json({ status: "Error", message: "DB Error: " + err.message });
     }
 });
 
@@ -315,12 +315,12 @@ app.get("/init-db", async (_req, res) => {
         let data = await Senci.findOne();
         if (!data) {
             data = await new Senci().save();
-            res.json({ status: "Initialized 💾", message: "Default links saved for the first time!", data });
+            res.json({ status: "Initialized", message: "Default links saved for the first time!", data });
         } else {
-            res.json({ status: "Existing 📁", message: "Database already has a record. No changes made.", data });
+            res.json({ status: "Existing", message: "Database already has a record. No changes made.", data });
         }
     } catch (err) {
-        res.status(500).json({ status: "Error ❌", message: "DB Init Error: " + err.message });
+        res.status(500).json({ status: "Error", message: "DB Init Error: " + err.message });
     }
 });
 
@@ -406,6 +406,27 @@ app.get("/vote-stats", async (_req, res) => {
     }
 });
 
+// ═══ DIALOG ROUTES ═══
+
+app.get("/dialog", async (req, res) => {
+    try {
+        const { version } = req.query;
+        let d = await Dialog.findOne({ active: true });
+        
+        if (!d) return res.json({ show: false });
+        
+        // Version Check: If targetVersions is empty = All Versions
+        if (d.targetVersions && d.targetVersions.length > 0 && version) {
+            const matches = d.targetVersions.includes(version);
+            if (!matches) return res.json({ show: false });
+        }
+        
+        res.json({ show: true, dialog: d });
+    } catch (e) { 
+        res.status(500).json({ error: e.message }); 
+    }
+});
+
 // ═══ SLIDER ROUTES ═══
 
 app.get("/sliders", async (_req, res) => {
@@ -421,5 +442,5 @@ module.exports = app;
 
 if (require.main === module) {
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => console.log(`Alpha Sensi API v1.0 → http://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`Alpha Sensi API v1.0 - http://localhost:${PORT}`));
 }
