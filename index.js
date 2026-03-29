@@ -35,41 +35,22 @@ const Slider = mongoose.model("Slider", SliderSchema);
 
 // MongoDB Connection
 const MONGO_URI = config.MONGO_URI;
-mongoose.connect(MONGO_URI)
-    .then(async () => {
-        console.log("✅ Connected to MongoDB (Cluster0)");
-        // Initialize default links if they don't exist
-        const exists = await Senci.findOne();
-        if (!exists) {
-            await new Senci().save();
-            console.log("💾 Default links saved to Database!");
-        }
 
-        // Initialize default Sliders if they don't exist
-        const sliderExists = await Slider.findOne();
-        if (!sliderExists) {
-            await Slider.insertMany([
-                {
-                    image_url: 'https://images.unsplash.com/photo-1614850523296-e8c1d07ed7a9?auto=format&fit=crop&w=800&q=80',
-                    title: 'Premium MODs',
-                    subtitle: 'Verified by Senci',
-                    badge: 'Hot',
-                    button_text: 'OPEN',
-                    button_url: 'https://google.com',
-                },
-                {
-                    image_url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
-                    title: 'Game Boost',
-                    subtitle: 'Ultra Performance',
-                    badge: 'MOD',
-                    button_text: 'GET',
-                    button_url: 'https://flutter.dev',
-                }
-            ]);
-            console.log("🖼️ Default Sliders saved to Database!");
+// Middleware to Ensure DB Connection is ready before each request (Crucial for Serverless)
+app.use(async (req, res, next) => {
+    try {
+        if (mongoose.connection.readyState !== 1) {
+            await mongoose.connect(MONGO_URI, {
+                serverSelectionTimeoutMS: 5000,
+                dbName: 'senci'
+            });
+            console.log("✅ Live: Re-connected to MongoDB");
         }
-    })
-    .catch(err => console.error("❌ MongoDB connection error:", err));
+    } catch (err) {
+        console.error("❌ DB Middleware Error:", err.message);
+    }
+    next();
+});
 
 
 
