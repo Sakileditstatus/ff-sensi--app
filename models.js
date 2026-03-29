@@ -21,7 +21,7 @@ const SliderSchema = new mongoose.Schema({
 });
 
 module.exports = {
-    Senci: mongoose.model("Senci", SenciSchema),
-    Vote: mongoose.model("Vote", VoteSchema),
-    Slider: mongoose.model("Slider", SliderSchema)
+    Senci: mongoose.models.Senci || mongoose.model("Senci", SenciSchema),
+    Vote: mongoose.models.Vote || mongoose.model("Vote", VoteSchema),
+    Slider: mongoose.models.Slider || mongoose.model("Slider", SliderSchema)
 };
