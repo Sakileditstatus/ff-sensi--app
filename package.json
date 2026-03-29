@@ -1,13 +1,9 @@
 {
-  "name": "ff-headshot-sensi-api",
-  "version": "6.0.0",
-  "description": "Free Fire Headshot Sensitivity API — device-based real sensitivity generator",
-  "type": "module",
-  "engines": {
-    "node": ">=18.x"
-  },
+  "name": "senci-server",
+  "version": "1.0.0",
+  "main": "index.js",
   "dependencies": {
     "express": "^4.18.2",
-    "mongoose": "^8.0.0"
+    "mongoose": "^7.5.0"
   }
 }
