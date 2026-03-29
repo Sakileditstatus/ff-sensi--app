@@ -14,6 +14,12 @@ const checkAuth = (req, res, next) => {
     }
 };
 
+// --- Security Obfuscation Wrapper ---
+function sendPayload(res, data) {
+    const rawData = JSON.stringify(data);
+    res.json({ payload: Buffer.from(rawData).toString("base64") });
+}
+
 // 0. ADMIN LOGIN API (No auth needed)
 router.post("/login", (req, res) => {
     const { email, password } = req.body;
@@ -45,7 +51,7 @@ router.get("/all", async (req, res) => {
         const working = votes.filter(v => v && v.voteType === 'working').length;
         const total = votes.length;
 
-        res.json({
+        sendPayload(res, {
             links,
             sliders,
             devicesCount,
@@ -129,7 +135,7 @@ router.get("/dialog/get", async (req, res) => {
     try {
         let d = await Dialog.findOne();
         if(!d) d = new Dialog();
-        res.json(d);
+        sendPayload(res, d);
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
