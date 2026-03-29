@@ -13,7 +13,7 @@ const SenciSchema = new mongoose.Schema({
 const Senci = mongoose.model("Senci", SenciSchema);
 
 // MongoDB Connection
-const MONGO_URI = "mongodb+srv://enzosrs:enzosrs%40123@cluster0.2aufqmu.mongodb.net/?appName=Cluster0";
+const MONGO_URI = "mongodb+srv://enzosrs:enzosrs%40123@cluster0.2aufqmu.mongodb.net/senci?appName=Cluster0";
 mongoose.connect(MONGO_URI)
     .then(async () => {
         console.log("✅ Connected to MongoDB (Cluster0)");
