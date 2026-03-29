@@ -57,6 +57,24 @@ app.use((req, res, next) => {
     next();
 });
 
+// --- App Security Check ---
+// Restricts direct browser access to API endpoints. Only the Flutter app is allowed.
+app.use((req, res, next) => {
+    const protectedPaths = ['/sensi', '/init', '/sliders', '/dialog', '/vote', '/vote-stats'];
+    const isProtected = protectedPaths.some(p => req.path === p || req.path.startsWith(p + '/'));
+
+    if (isProtected) {
+        if (req.headers['x-senci-auth'] !== 'SENSI_APP_VALID_2026' && req.headers['authorization'] !== 'ADMIN_SECURE_TOKEN_2026') {
+            return res.status(403).json({
+                error: "Unauthorized Access",
+                message: "Direct API access is restricted. Service currently unavailable.",
+                status: 403
+            });
+        }
+    }
+    next();
+});
+
 // Helper to extract numbers from strings like "8 Cores", "7.6 GB", "120 Hz"
 function parseVal(val) {
     if (typeof val === "string") {
