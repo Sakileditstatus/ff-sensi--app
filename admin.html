@@ -80,9 +80,9 @@
                     <span id="systemStatus" class="uppercase tracking-widest text-green-600">LIVE: ONLINE</span>
                 </p>
             </div>
-            <button onclick="fetchData()" class="bg-gray-100 p-2.5 rounded-full btn-ios text-gray-500 border border-gray-200/50">
-                <i data-lucide="rotate-cw" class="w-5 h-5"></i>
-            </button>
+        <button onclick="logoutAdmin()" class="bg-red-50 p-2.5 rounded-full btn-ios text-red-500 border border-red-100 shadow-sm">
+            <i data-lucide="power" class="w-5 h-5"></i>
+        </button>
         </header>
 
         <!-- CONTENT AREA -->
@@ -321,7 +321,6 @@
                 document.getElementById('votesTotal').innerText = data.votes.total;
                 document.getElementById('slidersCount').innerText = data.sliders.length;
                 document.getElementById('devicesCount').innerText = data.devicesCount || 0;
-                document.getElementById('totalHits').innerText = data.totalHits || 0;
                 if (data.links) {
                     document.getElementById('iosLink').value = data.links.ios || '';
                     document.getElementById('paidLink').value = data.links.paid || '';
