@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Sensi | Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f2f2f7; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .ios-shadow { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); }
+        .btn-ios { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-ios:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto space-y-8">
+        <!-- HEADER -->
+        <header class="flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-tight text-gray-900">Alpha Sensi Dashboard</h1>
+                <p class="text-gray-500 font-medium">Control your high-performance app</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="fetchData()" class="bg-white p-3 rounded-full ios-shadow btn-ios hover:text-blue-500 text-gray-400">
+                    <i data-lucide="rotate-cw" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- STATS OVERVIEW -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="glass p-6 rounded-[28px] ios-shadow flex items-center gap-5">
+                <div class="bg-blue-100 p-4 rounded-2xl text-blue-600"><i data-lucide="globe"></i></div>
+                <div><p class="text-xs text-gray-400 font-bold uppercase tracking-widest">LINKS</p><p id="linksCount" class="text-2xl font-black">3</p></div>
+            </div>
+            <div class="glass p-6 rounded-[28px] ios-shadow flex items-center gap-5">
+                <div class="bg-purple-100 p-4 rounded-2xl text-purple-600"><i data-lucide="image"></i></div>
+                <div><p class="text-xs text-gray-400 font-bold uppercase tracking-widest">SLIDERS</p><p id="slidersCount" class="text-2xl font-black">0</p></div>
+            </div>
+            <div class="glass p-6 rounded-[28px] ios-shadow flex items-center gap-5">
+                <div class="bg-green-100 p-4 rounded-2xl text-green-600"><i data-lucide="zap"></i></div>
+                <div><p class="text-xs text-gray-400 font-bold uppercase tracking-widest">VOTES</p><p id="votesTotal" class="text-2xl font-black">0</p></div>
+            </div>
+            <div class="glass p-6 rounded-[28px] ios-shadow flex items-center gap-5">
+                <div class="bg-pink-100 p-4 rounded-2xl text-pink-600"><i data-lucide="smile"></i></div>
+                <div><p class="text-xs text-gray-400 font-bold uppercase tracking-widest">HEALTH</p><p id="workingPercent" class="text-2xl font-black">0%</p></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- LINK MANAGEMENT (LEFT) -->
+            <div class="lg:col-span-1 glass p-8 rounded-[32px] ios-shadow h-fit">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="link" class="w-5 h-5"></i> Manage App Links
+                </h2>
+                <form id="linksForm" class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">iOS Link</label>
+                        <input type="text" id="iosLink" class="w-full bg-gray-100 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-500 font-medium text-gray-800" placeholder="https://...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Paid Sensi</label>
+                        <input type="text" id="paidLink" class="w-full bg-gray-100 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-500 font-medium text-gray-800" placeholder="https://...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Desktop Link</label>
+                        <input type="text" id="desktopLink" class="w-full bg-gray-100 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-500 font-medium text-gray-800" placeholder="https://...">
+                    </div>
+                    <button type="submit" class="w-full bg-[#007AFF] hover:bg-blue-600 text-white font-bold py-4 rounded-2xl btn-ios shadow-lg shadow-blue-500/20">
+                        Update All Links
+                    </button>
+                    <p id="linkStatus" class="text-center text-sm font-semibold opacity-0 transition-opacity"></p>
+                </form>
+            </div>
+
+            <!-- SLIDER MANAGEMENT (RIGHT) -->
+            <div class="lg:col-span-2 glass p-8 rounded-[32px] ios-shadow">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <i data-lucide="layout" class="w-5 h-5"></i> Banners & Sliders
+                    </h2>
+                    <button onclick="toggleSliderModal()" class="bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-full font-bold shadow-lg btn-ios text-sm flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i> New Banner
+                    </button>
+                </div>
+
+                <div id="sliderGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Dynamic Sliders list -->
+                    <div class="animate-pulse bg-gray-100 h-40 rounded-3xl"></div>
+                    <div class="animate-pulse bg-gray-100 h-40 rounded-3xl"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD SLIDER MODAL -->
+    <div id="sliderModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="glass w-full max-w-lg p-8 rounded-[32px] ios-shadow relative">
+            <button onclick="toggleSliderModal()" class="absolute top-6 right-6 text-gray-400 hover:text-black"><i data-lucide="x"></i></button>
+            <h3 class="text-2xl font-bold mb-6">Create New Banner</h3>
+            <form id="sliderForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="s_title" placeholder="Main Title (e.g. Free MOD)" class="bg-gray-100 p-4 rounded-2xl border-none col-span-2 font-medium" required>
+                    <input type="text" id="s_subtitle" placeholder="Subtitle" class="bg-gray-100 p-4 rounded-2xl border-none font-medium">
+                    <input type="text" id="s_badge" placeholder="Badge (Hot/New)" class="bg-gray-100 p-4 rounded-2xl border-none font-medium text-red-500">
+                    <input type="text" id="s_image" placeholder="Image URL" class="bg-gray-100 p-4 rounded-2xl border-none col-span-2 font-medium" required>
+                    <input type="text" id="s_btnText" placeholder="Button Text (GET)" class="bg-gray-100 p-4 rounded-2xl border-none font-medium">
+                    <input type="text" id="s_btnUrl" placeholder="Button Link" class="bg-gray-100 p-4 rounded-2xl border-none font-medium" required>
+                </div>
+                <button type="submit" class="w-full bg-[#007AFF] text-white py-4 mt-4 rounded-2xl font-bold btn-ios shadow-lg shadow-blue-500/20">
+                    Save Banner
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        
+        // Smart URL Detection: If running locally on a different port (like 5500), 
+        // point to the Express backend (3000) or Vercel production.
+        let BASE_URL = window.location.origin;
+        if (window.location.port === "5500" || window.location.hostname === "localhost") {
+            // Local dev override (change this to your server port 3000 if needed)
+            BASE_URL = window.location.port === "5500" ? "http://localhost:3000" : window.location.origin;
+        }
+
+        // --- FETCH ALL DATA ---
+        async function fetchData() {
+            try {
+                const res = await fetch(`${BASE_URL}/admin/all`);
+                const data = await res.json();
+                
+                // Update Stats
+                document.getElementById('votesTotal').innerText = data.votes.total;
+                document.getElementById('workingPercent').innerText = data.votes.workingPercent;
+                document.getElementById('slidersCount').innerText = data.sliders.length;
+                
+                // Fill Links (Current values from DB)
+                if (data.links) {
+                    const iosField = document.getElementById('iosLink');
+                    const paidField = document.getElementById('paidLink');
+                    const desktopField = document.getElementById('desktopLink');
+                    
+                    iosField.value = data.links.ios || '';
+                    paidField.value = data.links.paid || '';
+                    desktopField.value = data.links.desktop || '';
+
+                    // Visual indicator that data was loaded
+                    [iosField, paidField, desktopField].forEach(f => {
+                      f.classList.add('bg-white');
+                      f.classList.remove('bg-gray-100');
+                    });
+                }
+
+                // Render Sliders
+                renderSliders(data.sliders);
+            } catch (err) {
+                console.error("Dashboard Fetch Error", err);
+            }
+        }
+
+        function renderSliders(sliders) {
+            const grid = document.getElementById('sliderGrid');
+            grid.innerHTML = sliders.map(s => `
+                <div class="relative bg-white rounded-[24px] overflow-hidden group ios-shadow border border-white/40">
+                    <div class="absolute top-3 right-3 z-10">
+                        <button onclick="deleteSlider('${s._id}')" class="bg-white/90 p-2 rounded-full text-red-500 shadow-sm hover:bg-red-50 hover:scale-110 transition-all btn-ios">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <img src="${s.image_url}" class="w-full h-32 object-cover opacity-80" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400'">
+                    <div class="p-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] font-black bg-red-100 text-red-500 px-2 py-0.5 rounded-full uppercase">${s.badge || 'MOD'}</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800">${s.title}</h4>
+                        <p class="text-xs font-semibold text-gray-400 truncate">${s.button_url}</p>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-gray-400 font-medium italic">No active banners. Add some!</p>';
+            lucide.createIcons();
+        }
+
+        // --- SUBMIT LINKS ---
+        document.getElementById('linksForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const status = document.getElementById('linkStatus');
+            btn.innerText = "Saving...";
+            
+            const body = {
+                ios: document.getElementById('iosLink').value,
+                paid: document.getElementById('paidLink').value,
+                desktop: document.getElementById('desktopLink').value
+            };
+
+            const res = await fetch(`${BASE_URL}/admin/update-links`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+
+            if(res.ok) {
+                btn.innerText = "Update All Links";
+                status.innerText = "✅ Successfully Updated!";
+                status.classList.add('text-green-600', 'opacity-100');
+                setTimeout(() => status.classList.remove('opacity-100'), 3000);
+            }
+        });
+
+        // --- ADD SLIDER ---
+        document.getElementById('sliderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                title: document.getElementById('s_title').value,
+                subtitle: document.getElementById('s_subtitle').value,
+                badge: document.getElementById('s_badge').value,
+                image_url: document.getElementById('s_image').value,
+                button_text: document.getElementById('s_btnText').value,
+                button_url: document.getElementById('s_btnUrl').value,
+            };
+
+            const res = await fetch(`${BASE_URL}/admin/slider/add`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            });
+
+            if(res.ok) {
+                toggleSliderModal();
+                fetchData();
+                e.target.reset();
+            }
+        });
+
+        // --- DELETE SLIDER ---
+        async function deleteSlider(id) {
+            if(!confirm("Are you sure you want to delete this banner?")) return;
+            const res = await fetch(`${BASE_URL}/admin/slider/delete`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ id })
+            });
+            if(res.ok) fetchData();
+        }
+
+        function toggleSliderModal() {
+            const m = document.getElementById('sliderModal');
+            m.classList.toggle('hidden');
+        }
+
+        // LOAD ON START
+        fetchData();
+    </script>
+</body>
+</html>
