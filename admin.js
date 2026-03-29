@@ -10,7 +10,7 @@ const checkAuth = (req, res, next) => {
     if (authHeader === "ADMIN_SECURE_TOKEN_2026") {
         next();
     } else {
-        res.status(403).json({ error: "🔒 UNAUTHORIZED: ADMIN ACCESS ONLY" });
+        res.status(403).json({ error: "UNAUTHORIZED: ADMIN ACCESS ONLY" });
     }
 };
 
@@ -75,7 +75,7 @@ router.post("/update-links", async (req, res) => {
         if (desktop) config.desktop = desktop;
         
         await config.save();
-        res.json({ message: "✅ Links updated successfully", config });
+        res.json({ message: "Links updated successfully", config });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -86,7 +86,7 @@ router.post("/slider/add", async (req, res) => {
     try {
         const newSlider = new Slider(req.body);
         await newSlider.save();
-        res.json({ message: "✅ Slider added", slider: newSlider });
+        res.json({ message: "Slider added", slider: newSlider });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -97,7 +97,7 @@ router.post("/slider/update", async (req, res) => {
     const { id, ...updateData } = req.body;
     try {
         const updated = await Slider.findByIdAndUpdate(id, updateData, { new: true });
-        res.json({ message: "✅ Slider updated", slider: updated });
+        res.json({ message: "Slider updated", slider: updated });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -108,7 +108,7 @@ router.post("/slider/delete", async (req, res) => {
     const { id } = req.body;
     try {
         await Slider.findByIdAndDelete(id);
-        res.json({ message: "🗑️ Slider deleted" });
+        res.json({ message: "Slider deleted" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -118,10 +118,49 @@ router.post("/slider/delete", async (req, res) => {
 router.post("/reset-votes", async (req, res) => {
     try {
         await Vote.deleteMany({});
-        res.json({ message: "🧹 All votes cleared!" });
+        res.json({ message: "All votes cleared!" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+// 6. DIALOG MANAGEMENT
+router.get("/dialog/get", async (req, res) => {
+    try {
+        let d = await Dialog.findOne();
+        if(!d) d = new Dialog();
+        res.json(d);
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.post("/dialog/update", async (req, res) => {
+    try {
+        const { title, message, btn1Name, btn1Link, btn2Name, btn2Link, isCancelable, targetVersions, active } = req.body;
+        
+        // Target versions should be an array
+        let versions = [];
+        if (typeof targetVersions === "string") {
+            versions = targetVersions.split(",").map(v => v.trim()).filter(v => v);
+        } else if (Array.isArray(targetVersions)) {
+            versions = targetVersions;
+        }
+
+        let d = await Dialog.findOne();
+        if(!d) d = new Dialog();
+
+        d.title = title;
+        d.message = message;
+        d.btn1Name = btn1Name;
+        d.btn1Link = btn1Link;
+        d.btn2Name = btn2Name;
+        d.btn2Link = btn2Link;
+        d.isCancelable = isCancelable;
+        d.targetVersions = versions;
+        d.active = active;
+
+        await d.save();
+        res.json({ message: "Dialog updated", dialog: d });
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 module.exports = router;
