@@ -211,8 +211,9 @@ async function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw })
     };
 
     // Include links in the response from DB
-    const links = await Senci.findOne();
-    out.links = links || { ios: "", paid: "", desktop: "" };
+    let links = await Senci.findOne();
+    if (!links) links = new Senci(); // Use schema defaults
+    out.links = { ios: links.ios, paid: links.paid, desktop: links.desktop };
 
     return res.json(out);
 }
@@ -273,18 +274,21 @@ app.get("/health", (_req, res) => {
 // ═══ NEW LINK ROUTES ═══
 
 app.get("/ios-link", async (_req, res) => {
-    const config = await Senci.findOne();
-    res.json({ url: config?.ios || "" });
+    let config = await Senci.findOne();
+    if (!config) config = new Senci();
+    res.json({ url: config.ios });
 });
 
 app.get("/paid-link", async (_req, res) => {
-    const config = await Senci.findOne();
-    res.json({ url: config?.paid || "" });
+    let config = await Senci.findOne();
+    if (!config) config = new Senci();
+    res.json({ url: config.paid });
 });
 
 app.get("/desktop-link", async (_req, res) => {
-    const config = await Senci.findOne();
-    res.json({ url: config?.desktop || "" });
+    let config = await Senci.findOne();
+    if (!config) config = new Senci();
+    res.json({ url: config.desktop });
 });
 
 // Route to update links (convenience)
