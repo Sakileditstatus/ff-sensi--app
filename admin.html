@@ -314,9 +314,15 @@
         }
 
         // --- DATA ---
+        function getAuthHeader() {
+            return { 'Authorization': localStorage.getItem('adminToken') || '' };
+        }
+
         async function fetchData() {
             try {
-                const res = await fetch(`${BASE_URL}/admin/all`);
+                const res = await fetch(`${BASE_URL}/admin/all`, { 
+                    headers: { ...getAuthHeader() } 
+                });
                 const data = await res.json();
                 document.getElementById('votesTotal').innerText = data.votes.total;
                 document.getElementById('slidersCount').innerText = data.sliders.length;
@@ -381,7 +387,7 @@
             btn.innerText = "Updating...";
             const res = await fetch(`${BASE_URL}/admin/update-links`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
                 body: JSON.stringify({
                     ios: document.getElementById('iosLink').value, paid: document.getElementById('paidLink').value, desktop: document.getElementById('desktopLink').value
                 })
@@ -397,7 +403,7 @@
             const id = document.getElementById('s_id').value;
             const res = await fetch(`${BASE_URL}/admin/slider/${id ? 'update' : 'add'}`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
                 body: JSON.stringify({
                     title: document.getElementById('s_title').value,
                     subtitle: document.getElementById('s_subtitle').value,
@@ -435,7 +441,7 @@
             if(!confirm("Delete this banner?")) return;
             const res = await fetch(`${BASE_URL}/admin/slider/delete`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
                 body: JSON.stringify({ id })
             });
             if(res.ok) fetchData();
