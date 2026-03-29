@@ -26,9 +26,22 @@ const DeviceSchema = new mongoose.Schema({
     lastVisit: { type: Date, default: Date.now }
 });
 
+const DialogSchema = new mongoose.Schema({
+    title: { type: String, default: "New Update Available" },
+    message: { type: String, default: "Please download the latest version for the best experience." },
+    btn1Name: { type: String, default: "Download" },
+    btn1Link: { type: String, default: "" },
+    btn2Name: { type: String, default: "Later" },
+    btn2Link: { type: String, default: "" },
+    isCancelable: { type: Boolean, default: true },
+    targetVersions: { type: [String], default: [] }, // Empty = All Versions
+    active: { type: Boolean, default: false }
+});
+
 module.exports = {
     Senci: mongoose.models.Senci || mongoose.model("Senci", SenciSchema),
     Vote: mongoose.models.Vote || mongoose.model("Vote", VoteSchema),
     Slider: mongoose.models.Slider || mongoose.model("Slider", SliderSchema),
-    Device: mongoose.models.Device || mongoose.model("Device", DeviceSchema)
+    Device: mongoose.models.Device || mongoose.model("Device", DeviceSchema),
+    Dialog: mongoose.models.Dialog || mongoose.model("Dialog", DialogSchema)
 };
