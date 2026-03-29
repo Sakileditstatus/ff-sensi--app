@@ -438,6 +438,42 @@ app.get("/sliders", async (_req, res) => {
     }
 });
 
+// ═══ APP INIT (FAST FETCH) ═══
+
+app.get("/init", async (req, res) => {
+    try {
+        const { deviceId, version } = req.query;
+        
+        // 1. Async Tracking (Fire & Forget to save time)
+        if (deviceId) {
+            trackDevice(deviceId).catch(() => {});
+        }
+
+        // 2. Parallel Data Fetching
+        const [sliders, d] = await Promise.all([
+            Slider.find(),
+            Dialog.findOne({ active: true })
+        ]);
+
+        // 3. Process Dialog Logic
+        let dialogPayload = { show: false };
+        if (d) {
+            if (!d.targetVersions || d.targetVersions.length === 0 || !version) {
+                dialogPayload = { show: true, data: d };
+            } else if (d.targetVersions.includes(version)) {
+                dialogPayload = { show: true, data: d };
+            }
+        }
+
+        res.json({
+            sliders: sliders,
+            dialog: dialogPayload
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = app;
 
 if (require.main === module) {
