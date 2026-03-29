@@ -285,10 +285,24 @@ app.get("/db-status", async (_req, res) => {
         if (data) {
             res.json({ status: "Success ✅", message: "Data is saved in DB!", data });
         } else {
-            res.json({ status: "Empty ⚠️", message: "DB connected but no data record yet." });
+            res.json({ status: "Empty ⚠️", message: "DB connected but no data record yet. Visit /init-db to fix this." });
         }
     } catch (err) {
         res.status(500).json({ status: "Error ❌", message: "DB Error: " + err.message });
+    }
+});
+
+app.get("/init-db", async (_req, res) => {
+    try {
+        let data = await Senci.findOne();
+        if (!data) {
+            data = await new Senci().save();
+            res.json({ status: "Initialized 💾", message: "Default links saved for the first time!", data });
+        } else {
+            res.json({ status: "Existing 📁", message: "Database already has a record. No changes made.", data });
+        }
+    } catch (err) {
+        res.status(500).json({ status: "Error ❌", message: "DB Init Error: " + err.message });
     }
 });
 
