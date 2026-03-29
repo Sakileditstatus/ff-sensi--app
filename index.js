@@ -6,7 +6,29 @@ const app = express();
 app.use(express.json());
 
 const config = require("./config");
-const { Senci, Vote, Slider } = require("./models");
+const { Senci, Vote, Slider, Device } = require("./models");
+
+const path = require("path");
+
+// --- Helper: Track Device ---
+async function trackDevice(deviceId) {
+    try {
+        if(deviceId) {
+            await Device.findOneAndUpdate({ deviceId }, { lastVisit: Date.now() }, { upsert: true, new: true });
+        }
+        await Senci.findOneAndUpdate({}, { $inc: { hits: 1 } }, { upsert: true });
+    } catch(e) { console.error("Tracking Error", e); }
+}
+
+app.get("/admin-panel", (req, res) => {
+    res.sendFile(path.join(__dirname, "admin.html"));
+});
+
+app.get("/track", (req, res) => {
+    const { deviceId } = req.query;
+    if (deviceId) trackDevice(deviceId);
+    res.json({ success: true, message: "Visit tracked" });
+});
 
 // MongoDB Connection
 const MONGO_URI = config.MONGO_URI;
@@ -245,7 +267,8 @@ app.get("/", (_req, res) => {
 });
 
 app.get("/sensi", (req, res) => {
-    const { cores, ram, rr, dpi, screen, gpu_name, hardware, model } = req.query;
+    const { cores, ram, rr, dpi, screen, gpu_name, hardware, model, deviceId } = req.query;
+    if(deviceId) trackDevice(deviceId);
     
     const parsed = {
         cores: parseVal(cores),
@@ -264,7 +287,8 @@ app.get("/sensi", (req, res) => {
 });
 
 app.post("/sensi", (req, res) => {
-    const { cores, ram, rr, dpi, screen, gpu_name, hardware, model } = req.body || {};
+    const { cores, ram, rr, dpi, screen, gpu_name, hardware, model, deviceId } = req.body || {};
+    if(deviceId) trackDevice(deviceId);
     
     const parsed = {
         cores: parseVal(cores),
