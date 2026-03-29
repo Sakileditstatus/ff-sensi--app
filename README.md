@@ -1,19 +1,29 @@
 # Free Fire Headshot Sensitivity API v6.0
 
-Device specs dalo → Real headshot sensitivity milegi. No styles confusion — ek single optimised formula covers drag, one-tap & deadshot sab.
+Device specs dalo → Real headshot sensitivity milegi.
 
 ---
 
-## Parameters
+## 👑 1. Admin Dashboard (GUI)
+Use this for **easy point-and-click management** of links and banners.
 
-| Param    | Type   | Required | Values              | Description              |
-|----------|--------|----------|---------------------|--------------------------|
-| `cores`  | int    | Yes      | 4, 6, 8, 10         | CPU core count           |
-| `gpu`    | int    | Yes      | 1, 2, 3, 4          | GPU tier (see below)     |
-| `ram`    | float  | Yes      | 2–16                | RAM in GB                |
-| `rr`     | float  | Yes      | 60–165              | Refresh rate in Hz       |
-| `dpi`    | float  | Yes      | 100–3200            | Touch DPI                |
-| `screen` | float  | Yes      | 4.5–7.5             | Screen size in inches    |
+- **Main Dashboard**: [https://ff-sensi-app.vercel.app/](https://ff-sensi-app.vercel.app)
+  *   Manage App Links (iOS, Paid, Desktop)
+  *   Add/Edit/Delete Dynamic Banners
+  *   View Live System Health & Stats
+
+---
+
+## 🛠️ 2. API Parameters
+
+| Param    | Type   | Required | Description |
+|----------|--------|----------|-------------|
+| `cores`  | int    | Yes      | CPU core count (e.g. 8) |
+| `gpu_name`| string | Yes      | GPU model (e.g. Adreno 740) |
+| `ram`    | float  | Yes      | RAM in GB (e.g. 8) |
+| `rr`     | float  | Yes      | Refresh rate in Hz (60-165) |
+| `dpi`    | float  | Yes      | Touch DPI (100-3200) |
+| `screen` | float  | Yes      | Screen size in inches (4.5-7.5) |
 
 ### GPU Tiers
 ```
@@ -93,6 +103,20 @@ curl -X POST https://your-api.vercel.app/sensi \
 ```json
 { "status": "ok", "version": "6.0.0", "uptime": "42s" }
 ```
+
+---
+
+## 🏗️ 3. Admin API (Auth Required)
+You can use these directly or via the Dashboard:
+
+| Goal | Endpoint | Method |
+| :--- | :--- | :--- |
+| **Update Links** | `/admin/update-links` | `POST` |
+| **New Banner** | `/admin/slider/add` | `POST` |
+| **Edit Banner** | `/admin/slider/update` | `POST` |
+| **Delete Banner** | `/admin/slider/delete` | `POST` |
+| **Get All Stats** | `/admin/all` | `GET` |
+| **Seed DB** | `/init-db` | `GET` |
 
 ---
 
