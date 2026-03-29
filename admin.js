@@ -17,13 +17,19 @@ router.post("/login", (req, res) => {
 // 1. GET ALL DATA (Dashboard Overview)
 router.get("/all", async (req, res) => {
     try {
-        const links = await Senci.findOne();
-        const sliders = await Slider.find();
-        const votes = await Vote.find();
-        const devicesCount = await Device.countDocuments();
-        const totalHits = links ? (links.hits || 0) : 0;
+        // Find existing or fallback to empty
+        const links = await Senci.findOne() || { ios: "", paid: "", desktop: "", hits: 0 };
+        const sliders = await Slider.find() || [];
+        const votes = await Vote.find() || [];
         
-        const working = votes.filter(v => v.voteType === 'working').length;
+        // Count unique devices (safety for new models)
+        let devicesCount = 0;
+        try {
+            devicesCount = await Device.countDocuments();
+        } catch (e) { console.log("Device Tracking not initialized yet"); }
+
+        const totalHits = links ? (links.hits || 0) : 0;
+        const working = votes.filter(v => v && v.voteType === 'working').length;
         const total = votes.length;
 
         res.json({
@@ -39,7 +45,8 @@ router.get("/all", async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("ADMIN ALL ERROR:", err);
+        res.status(500).json({ status: "error", message: err.message });
     }
 });
 
