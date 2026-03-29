@@ -4,12 +4,6 @@ const app = express();
 
 app.use(express.json());
 
-// MongoDB Connection
-const MONGO_URI = "mongodb+srv://enzosrs:enzosrs%40123@cluster0.2aufqmu.mongodb.net/?appName=Cluster0";
-mongoose.connect(MONGO_URI)
-    .then(() => console.log("✅ Connected to MongoDB (Cluster0)"))
-    .catch(err => console.error("❌ MongoDB connection error:", err));
-
 // Schema for Senci Links (Stored in DB)
 const SenciSchema = new mongoose.Schema({
     ios: { type: String, default: "https://apple.com" },
@@ -17,6 +11,20 @@ const SenciSchema = new mongoose.Schema({
     desktop: { type: String, default: "https://desktoplink.com" }
 });
 const Senci = mongoose.model("Senci", SenciSchema);
+
+// MongoDB Connection
+const MONGO_URI = "mongodb+srv://enzosrs:enzosrs%40123@cluster0.2aufqmu.mongodb.net/?appName=Cluster0";
+mongoose.connect(MONGO_URI)
+    .then(async () => {
+        console.log("✅ Connected to MongoDB (Cluster0)");
+        // Initialize default links if they don't exist
+        const exists = await Senci.findOne();
+        if (!exists) {
+            await new Senci().save();
+            console.log("💾 Default links saved to Database!");
+        }
+    })
+    .catch(err => console.error("❌ MongoDB connection error:", err));
 
 
 
@@ -269,6 +277,19 @@ app.post("/sensi", (req, res) => {
 
 app.get("/health", (_req, res) => {
     res.json({ status: "ok", version: "1.0", uptime: Math.round(process.uptime()) + "s" });
+});
+
+app.get("/db-status", async (_req, res) => {
+    try {
+        const data = await Senci.findOne();
+        if (data) {
+            res.json({ status: "Success ✅", message: "Data is saved in DB!", data });
+        } else {
+            res.json({ status: "Empty ⚠️", message: "DB connected but no data record yet." });
+        }
+    } catch (err) {
+        res.status(500).json({ status: "Error ❌", message: "DB Error: " + err.message });
+    }
 });
 
 // ═══ NEW LINK ROUTES ═══
