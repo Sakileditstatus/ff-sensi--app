@@ -8,6 +8,9 @@ app.use(express.json());
 const config = require("./config");
 const { Senci, Vote, Slider, Device, Dialog } = require("./models");
 
+// --- STATIC ASSETS ---
+app.use(express.static(path.join(__dirname, "public")));
+
 // --- Helper: Track Device ---
 async function trackDevice(deviceId) {
     try {
@@ -267,12 +270,7 @@ async function buildResponse(res, { cores, gpuTier, ram, rr, dpi, screen, raw })
 // ═══ ROUTES ═══
 
 app.get("/", (_req, res) => {
-    res.json({
-        name: "Alpha Sensi Headshot API",
-        version: "1.0",
-        endpoint: "/sensi",
-        params: ["cores", "ram", "rr", "dpi", "screen", "gpu_name", "hardware", "model"]
-    });
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.get("/sensi", (req, res) => {
