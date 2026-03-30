@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
-  <title>SENCI | Performance Matrix Updates</title>
+  <title>SENCI | Monitoring Dashboard Updates</title>
   <link>https://ff-sensi.shop</link>
-  <description>Latest updates and hardware optimization profiles from the Senci Silk Engine.</description>
+  <description>Latest updates and hardware monitoring profiles from SENCI.</description>
   <item>
-    <title>Senci v2.4 Release: Silk Engine Matrix</title>
+    <title>Senci v2.4 Release: Dashboard Features</title>
     <link>https://ff-sensi.shop</link>
-    <description>New hardware scanning engine with zero-overhead precision and thermal regulation.</description>
+    <description>New hardware scanning dashboard with zero-overhead monitoring and thermal tracking.</description>
     <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
   </item>
 </channel>

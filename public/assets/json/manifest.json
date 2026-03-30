@@ -1,7 +1,7 @@
 {
-  "name": "SENCI Performance Matrix",
+  "name": "SENCI Monitoring App",
   "short_name": "SENCI",
-  "description": "Professional Hardware Optimization and Performance Matrix Engine.",
+  "description": "Professional Device Tracking and Monitoring App.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#050505",

@@ -146,27 +146,27 @@ const ReviewSlider = () => {
     {
       name: "@DevNexus",
       role: "Mobile Engineer",
-      text: "SENCI delivers zero-overhead precision. My hardware metrics jumped by 40% instantly after the core matrix activation.",
+      text: "SENCI is a great monitoring tool. Replaced previous apps and gives me clear device info.",
     },
     {
       name: "@HardwarePro",
       role: "Tech Reviewer",
-      text: "The hardware scanning is revolutionary. It manages thermal throttling far better than any native mobile OS controls.",
+      text: "The hardware scanning gives me good insights into my device's temperature.",
     },
     {
       name: "@CyberPunk_X",
       role: "Pro Gamer",
-      text: "Absolute zero lag in every session. This is the gold standard for high-performance hardware tuning globally.",
+      text: "A very smooth app experience. Good standard for device tracking apps.",
     },
     {
       name: "@AlphaTech",
       role: "UI Designer",
-      text: "The touch digitizer optimization is unlike anything I've used. Fluidity at its absolute peak.",
+      text: "The UI is very fluid, easy to check my device stats.",
     },
     {
       name: "@SenciFan_01",
       role: "Optimization Enthusiast",
-      text: "Finally, an app that actually does what it says. My battery life and temps are perfectly balanced now.",
+      text: "Helpful for keeping an eye on my battery and temperature.",
     },
   ];
   const [index, setIndex] = React.useState(0);
@@ -220,27 +220,27 @@ const FAQSection = () => {
   const faqs = [
     {
       q: "Is SENCI safe for my device?",
-      a: "SENCI operates within safe hardware thresholds using our Dynamic Throttling engine to prevent any overheating.",
+      a: "Yes. SENCI is a passive monitoring tool and does not interfere with system operations, ensuring safety.",
     },
     {
-      q: "How much performance increase can I expect?",
-      a: "Users typically report a 30-45% increase in stability and real-time response accuracy.",
+      q: "What can I expect from the app?",
+      a: "Users benefit from better awareness of their device's current state, resource usage, and temperature trends.",
     },
     {
       q: "Does it require root access?",
-      a: "No. SENCI works at the application layer to optimize hardware distribution without risky system modifications.",
+      a: "No. SENCI is a standard application and does not require or request root modifications.",
     },
     {
       q: "Will it consume more battery?",
-      a: "On the contrary, Senci's Efficiency core intelligently manages idle CPU cycles, often leading to better battery life over time.",
+      a: "SENCI is lightweight and designed to consume minimal battery while monitoring your stats in the background.",
     },
     {
       q: "Can I use Senci on multiple devices?",
       a: "Yes, your SENCI PRO license supports seamless synchronization across up to three devices simultaneously.",
     },
     {
-      q: "How often are the cloud profiles updated?",
-      a: "Our Silk Engine Matrix syncs with global telemetry data every 24 hours to deliver the most optimized settings for your hardware.",
+      q: "How often are the dashboards updated?",
+      a: "The app updates regularly to support monitoring new device models and improve the user interface.",
     },
   ];
 
@@ -336,10 +336,9 @@ const AboutHowSection = () => (
             What is Senci?
           </h4>
           <p className="text-[var(--muted-text)] text-sm font-semibold">
-            SENCI is a professional-grade mobile hardware optimization engine
-            designed to bridge the gap between software constraints and hardware
-            potential. It acts as a high-performance bridge that unlocks hidden
-            capability within your device's chipset and display digitizer.
+            SENCI is a utility application designed to provide insights into your device's
+            status and performance metrics. It acts as an easy-to-use dashboard to keep you
+            informed about your phone's active state and background resource consumption.
           </p>
         </div>
         <div className="glass p-6 border-l-4 border-l-purple-500">
@@ -347,11 +346,9 @@ const AboutHowSection = () => (
             How it Works?
           </h4>
           <p className="text-[var(--muted-text)] text-sm font-semibold">
-            By implementing a real-time Silk Engine Matrix, SENCI bypasses
-            standard OS polling limitations. It uses low-level hardware
-            abstraction to recalibrate touch sensitivity and CPU frequency
-            scaling, ensuring that your device responds with zero latency during
-            peak performance loads.
+            By implementing a streamlined interface, SENCI allows you to view system information easily.
+            It uses standard APIs to report device statistics without modifying system settings or
+            requiring special permissions, giving you a clear view of your device's operational status.
           </p>
         </div>
       </div>
@@ -362,7 +359,7 @@ const AboutHowSection = () => (
           <Icon name="Zap" size={32} />
         </div>
         <h5 className="text-[var(--text-color)] font-black text-xs uppercase tracking-widest">
-          Instant Response
+          Quick Stats
         </h5>
       </div>
       <div className="glass p-8 text-center mt-12">
@@ -370,7 +367,7 @@ const AboutHowSection = () => (
           <Icon name="BarChart3" size={32} />
         </div>
         <h5 className="text-[var(--text-color)] font-black text-xs uppercase tracking-widest">
-          FPS Stability
+          Resource Tracking
         </h5>
       </div>
       <div className="glass p-8 text-center">
@@ -378,7 +375,7 @@ const AboutHowSection = () => (
           <Icon name="Target" size={32} />
         </div>
         <h5 className="text-[var(--text-color)] font-black text-xs uppercase tracking-widest">
-          Zero Jitter
+          Device Info
         </h5>
       </div>
       <div className="glass p-8 text-center mt-12">
@@ -386,7 +383,7 @@ const AboutHowSection = () => (
           <Icon name="Infinity" size={32} />
         </div>
         <h5 className="text-[var(--text-color)] font-black text-xs uppercase tracking-widest">
-          Cloud Sync
+          Insights
         </h5>
       </div>
     </div>
@@ -424,14 +421,14 @@ const WaterWaveGraph = () => {
     >
       <div className="absolute top-6 left-8 z-10">
         <p className="text-[9px] font-black text-[#007AFF] tracking-[0.4em] uppercase">
-          Silk Engine Matrix
+          Device Telemetry
         </p>
       </div>
 
       <div className="absolute top-6 right-8 z-10 flex items-center gap-2 glass-pill px-4 py-1.5 border border-blue-500/20 glitch-text">
         <span className="w-1.5 h-1.5 rounded-full bg-[#007AFF] animate-pulse"></span>
         <span className="text-[8px] font-black text-[#007AFF] tracking-widest uppercase text-shadow">
-          REAL-TIME DATA FLUX
+          ACTIVITY DASHBOARD
         </span>
       </div>
 
@@ -642,15 +639,15 @@ const App = () => {
               data-aos-delay="200"
             >
               Built for <br />
-              <span className="text-gradient-primary">Performance.</span>
+              <span className="text-gradient-primary">Monitoring.</span>
             </h1>
             <p
               className="text-[var(--muted-text)] text-lg md:text-xl mb-4 md:mb-10 max-w-lg leading-relaxed font-bold"
               data-aos="fade-right"
               data-aos-delay="300"
             >
-              Experience absolute precision in every pixel. Senci is the world's
-              most advanced engine for hardware optimization.
+              Keep track of your device with clarity. Senci is an advanced utility
+              for viewing system metrics and resource usage.
             </p>
             <div
               className="flex flex-col sm:flex-row gap-4"
@@ -658,7 +655,7 @@ const App = () => {
               data-aos-delay="400"
             >
               <button className="btn-primary">GET SENCI PRO</button>
-              <button className="btn-secondary">WATCH DEMO</button>
+              <button className="btn-secondary">VIEW DASHBOARD</button>
             </div>
           </div>
           <div className="relative mt-2 lg:mt-0 flex justify-center items-center h-[300px] md:h-[500px]">
@@ -686,56 +683,56 @@ const App = () => {
 
       <section className="mb-20">
         <SectionHeader
-          title="Core Systems"
-          subtitle="Advanced Features"
+          title="App Features"
+          subtitle="Utility Tools"
           centered
         />
         <div className="grid md:grid-cols-3 gap-8">
           <FeatureDetail
             icon="Fingerprint"
-            title="Silk Sensitivity"
+            title="Device Stats"
             delay="100"
             content={
               <>
-                Achieve absolute precision with our advanced Silk Engine.
+                Monitor your device status easily and effectively.
                 <br />
-                Bypass device polling limits for zero-latency response.
+                View real-time data about your hardware specifications.
                 <br />
-                Smooth out every flick and swipe with low-level tuning.
+                Check system load to understand app behavior.
                 <br />
-                The definitive standard for professional mobile gaming.
+                The standard standard for resource monitoring on mobile.
               </>
             }
           />
           <FeatureDetail
             icon="ThermometerSnowflake"
-            title="Thermal Balancing"
+            title="Thermal Tracking"
             delay="200"
             content={
               <>
-                Maintain high frame rate with our predictive cooling.
+                Monitor your device's temperature readings accurately.
                 <br />
-                Distribute the process load across all available cores.
+                Track heat generation from intensive background apps.
                 <br />
-                Prevent thermal throttle during your longest sessions.
+                Prevent overheating by knowing when to let your phone cool down.
                 <br />
-                Stay at constant 120 FPS without hardware stuttering.
+                Stay informed on your device's operational state over time.
               </>
             }
           />
           <FeatureDetail
             icon="CloudLightning"
-            title="Cloud Optima"
+            title="Profile Sync"
             delay="300"
             content={
               <>
-                Get thousand of curated profiles for every device.
+                Save your dashboard layouts to the cloud securely.
                 <br />
-                Get real-time updates based on global community data.
+                Sync your preferences across multiple mobile devices.
                 <br />
-                Eliminate trial-and-error with proven pro settings.
+                Keep your customized tracking metrics available anywhere.
                 <br />
-                Perfectly tuned configurations delivered to your app.
+                Easily transfer settings to your new smartphone seamlessly.
               </>
             }
           />
