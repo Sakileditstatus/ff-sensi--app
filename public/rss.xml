@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>SENCI | Performance Matrix Updates</title>
+  <link>https://ff-sensi.shop</link>
+  <description>Latest updates and hardware optimization profiles from the Senci Silk Engine.</description>
+  <item>
+    <title>Senci v2.4 Release: Silk Engine Matrix</title>
+    <link>https://ff-sensi.shop</link>
+    <description>New hardware scanning engine with zero-overhead precision and thermal regulation.</description>
+    <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
+  </item>
+</channel>
+</rss>

@@ -3,38 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Safety Protocol | SENCI</title>
+  
+  <!-- SEO CORE -->
+  <title>Safety Hub | SENCI Mobile Hardware Protection & Stability</title>
+  <meta name="description" content="Discover the multilayered security of SENCI. We engineer safety for your mobile hardware through thermal monitoring, frequency balancing, and real-time stability protocols.">
+  <meta name="keywords" content="SENCI Safety Hub, Mobile Hardware Safety, Thermal Protection, Battery Health, CPU Optimization Security, Safe Overclocking, Mobile Stability Matrix">
+  <link rel="canonical" href="https://ff-sensi.shop/safety.html">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+  <!-- PNG Favicons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+
+  <!-- Android Chrome Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/img/android-chrome-512x512.png">
+
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="assets/img/site.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- ASSETS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="p-10 md:p-24 overflow-y-auto">
-  <div class="max-w-4xl mx-auto">
-    <a href="index.html" class="inline-flex items-center gap-2 text-cyan-500 font-black text-xs uppercase tracking-widest mb-12 hover:gap-4 transition-all">
-      <span data-lucide="arrow-left" class="w-4 h-4"></span> Back to Base
+<body class="selection:bg-[#007AFF] selection:text-white bg-[#F2F2F7] text-[var(--text-color)]">
+  
+  <!-- APP BACKGROUND (WAVES) -->
+  <div class="fixed inset-0 pointer-events-none z-[-10] overflow-hidden bg-[#F2F2F7]">
+    <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="none" class="w-full h-full">
+      <defs>
+        <linearGradient id="grad-blue" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#007AFF" stop-opacity="0.1" />
+          <stop offset="100%" stop-color="#007AFF" stop-opacity="0.02" />
+        </linearGradient>
+        <linearGradient id="grad-green" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#34C759" stop-opacity="0.1" />
+          <stop offset="100%" stop-color="#34C759" stop-opacity="0.02" />
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
+          <feOffset dx="0" dy="5" result="offsetblur" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.1" /></feComponentTransfer>
+          <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="shadow-bottom" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
+          <feOffset dx="0" dy="-5" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.1" /></feComponentTransfer>
+          <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+      <path d="M 400 0 C 600 100, 800 50, 1000 250 L 1000 0 Z" fill="url(#grad-blue)" filter="url(#shadow)" />
+      <path d="M 200 0 C 400 150, 700 100, 1000 150 L 1000 0 Z" fill="#007AFF" opacity="0.03" />
+      <path d="M 0 700 C 100 850, 300 750, 600 1000 L 0 1000 Z" fill="url(#grad-green)" filter="url(#shadow-bottom)" />
+      <path d="M 0 850 C 150 950, 400 850, 800 1000 L 0 1000 Z" fill="#34C759" opacity="0.03" />
+      <path d="M 1000 400 C 850 450, 800 550, 1000 600 Z" fill="#FF9500" opacity="0.08" filter="url(#shadow)" />
+    </svg>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-6 pt-12 pb-0 md:pt-24 md:pb-0 relative z-10">
+    <a href="index.html" class="inline-flex items-center gap-2 text-[#007AFF] font-black text-[10px] uppercase tracking-[0.2em] mb-12 hover:gap-4 transition-all">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Core Matrix
     </a>
     
-    <div class="glass p-8 md:p-12 mb-12 border-l-4 border-cyan-500">
-      <h1 class="mb-10 text-white">Safety <br /><span class="text-gradient-primary">Protocol.</span></h1>
-      <div class="space-y-8 text-[var(--muted-text)] leading-relaxed font-bold">
+    <div class="mb-12">
+      <h1 class="mb-12 text-[var(--text-color)] leading-tight">Safety <br /><span class="text-gradient-primary uppercase text-sm font-black tracking-widest block mt-4">Hardware Protection Cluster 2.0</span></h1>
+      
+      <div class="space-y-12 text-[var(--muted-text)] leading-relaxed font-semibold">
         <section>
-          <h2 class="text-white text-xl mb-4">01. Dynamic Throttling</h2>
-          <p>SENCI automatically manages power distribution. It prevents hardware overheating by dynamically throttling performance before critical heat thresholds are reached.</p>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <i data-lucide="shield-check" class="text-emerald-500 w-8 h-8"></i> Security Over Speed
+          </h2>
+          <p class="mb-6">The SENCI Safety Hub is designed with a single, uncompromising principle: Performance without protection is failure. Our software utilizes advanced neural hardware monitoring systems that provide a multi-layered shield between your device's chipset and any optimization instructions. This hub is the primary source for technical information regarding the safe usage of the SENCI core matrix.</p>
+          <p>Every optimization profile generated by SENCI undergoes a rigorous validation process across thousands of virtual and physical hardware clusters. We do not push "bleeding edge" settings that could jeopardize the lifespan of your mobile hardware. Instead, we focus on reclaiming efficiency that is often lost due to poor OS polling and bloat orchestration.</p>
         </section>
+
         <section>
-          <h2 class="text-white text-xl mb-4">02. Battery Health</h2>
-          <p>Our optimization engine is designed to extend battery lifecycle. It reduces idle voltage spikes that contribute to long-term lithium degradation.</p>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <i data-lucide="thermometer" class="text-red-500 w-8 h-8"></i> Dynamic Thermal Throttling
+          </h2>
+          <p class="mb-6">Heat is the single greatest enemy of mobile performance. Traditional "boosters" often ignore thermal limits, leading to rapid degradation of the CPU die and battery health. SENCI implements a <strong>Dynamic Thermal Matrix (DTM)</strong> that operates in real-time. If your device crosses a specific temperature threshold (customized per model), SENCI automatically downscales non-critical background processes and adjusts core frequencies to restore thermal equilibrium.</p>
+          <ul class="list-disc pl-6 space-y-4">
+            <li><strong>Thermal Prediction:</strong> Our engine doesn't just react to heat; it predicts it based on current computational load and historical hardware profiles.</li>
+            <li><strong>Cool-Down Mode:</strong> If a critical temperature is reached, SENCI activates an emergency cool-down mode, which bypasses all performance optimization to prioritize heat dissipation.</li>
+            <li><strong>Battery Health Monitor:</strong> Monitoring the voltage stability during high-load sessions to ensure that the lithium-ion cells are not stressed beyond their safe discharge rates.</li>
+          </ul>
         </section>
+
         <section>
-          <h2 class="text-white text-xl mb-4">03. Hardware Guard</h2>
-          <p>SENCI operates at a safe layer of the OS, ensuring that no permanent damage can happen to the device chips or memory units.</p>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+             <i data-lucide="zap" class="text-blue-500 w-8 h-8"></i> Core Stability Matrix
+          </h2>
+          <p class="mb-6">The "Stable Core" engine ensures that every frame rendered is backed by consistent hardware signals. When SENCI optimizes your frequency scaling, it avoids "extreme spikes" that cause system micro-stutters. By smoothing out the voltage curve, we achieve a more consistent and sustainable level of performance that feels "Silk Smooth" without crashing the OS environment.</p>
+          <p>This stability matrix prevents typical issues such as random reboots, system application crashes, and UI freezes that are often associated with substandard hardware modification tools. SENCI works *with* your device's kernels, not against them.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <i data-lucide="alert-octagon" class="text-orange-500 w-8 h-8"></i> Root & Warranty Policy
+          </h2>
+          <p class="mb-6">A major safety feature of SENCI is its ability to operate without requiring Root Access (Android) or Jailbreak (iOS). By leveraging standard public and private hardware APIs, we provide professional-level optimization without breaking your OS's security sandbox. This means your manufacturer's warranty remains 100% intact, and your device stays protected against external security threats at the system level.</p>
+          <div class="glass p-6 border-l-4 border-l-red-500 bg-red-500/5">
+             <p class="text-red-600 font-black text-xs uppercase tracking-widest mb-2">Safety Warning:</p>
+             <p class="text-sm">Never use SENCI in conjunction with other third-party overclocking or hardware modification tools. Conflicts between multiple optimization engines can lead to catastrophic hardware errors and system instability.</p>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <i data-lucide="refresh-cw" class="text-teal-500 w-8 h-8"></i> Safety Updates & Global Data
+          </h2>
+          <p class="mb-6">The SENCI Safety Hub receives real-time updates from our global community feedback loop. If a specific device model reports instability with a certain profile, that profile is instantly flagged and quarantined for all users until a patch is deployed. This collective intelligence makes SENCI safer than any native OS performance mode, which is often limited to a few static configurations.</p>
+          <p>We recommend all users keep the "Auto-Sync Safety Profiles" setting enabled to ensure they are always using the most stable configurations approved by our hardware engineering team.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <i data-lucide="help-circle" class="text-purple-500 w-8 h-8"></i> Emergency Protocol
+          </h2>
+          <p>In any case of unexpected system behavior, simply swipe down to the notification tray and hit the "EMERGENCY RESET" button. This will instantly terminate the SENCI core matrix, restore the default factory hardware profiles, and flush the optimization cache. Your device will return to its original stock configuration in less than 200 milliseconds.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <i data-lucide="mail" class="text-blue-500 w-8 h-8"></i> Safety Inquiries
+          </h2>
+          <p>For detailed technical whitepapers regarding the SENCI safety layers, or to report a hardware stability issue, please contact our Hardware Reliability Team at <strong>safety@ff-sensi.shop</strong>. Safety is our priority, and we value all community reports that help us maintain 99.9% system stability.</p>
         </section>
       </div>
     </div>
     
-    <p class="text-[10px] font-black uppercase tracking-widest text-[var(--muted-text)] text-center">© 2024 SENCI SYSTEMS. ALL RIGHTS PROTECTED.</p>
+    <footer class="pt-12 pb-4 border-t border-[var(--glass-border)] mt-24">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-widest text-[var(--muted-text)]">
+        <p class="text-[var(--text-color)] text-[10px] tracking-[0.2em]">© 2024 SENCI SYSTEMS. ENGINEERED FOR SPEED.</p>
+        <div class="flex items-center gap-10 text-[var(--muted-text)]">
+          <a href="privacy.html" class="hover:text-[#007AFF] transition-colors">Privacy</a>
+          <a href="terms.html" class="hover:text-[#007AFF] transition-colors">Terms</a>
+          <a href="safety.html" class="hover:text-[#007AFF] transition-colors">Safety Hub</a>
+        </div>
+        <div class="flex items-center gap-6 opacity-60 text-[var(--text-color)]">
+          <i data-lucide="twitter" class="w-4 h-4"></i>
+          <i data-lucide="github" class="w-4 h-4"></i>
+        </div>
+      </div>
+    </footer>
   </div>
   
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>lucide.createIcons();</script>
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 </html>

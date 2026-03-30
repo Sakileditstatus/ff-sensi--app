@@ -3,38 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Terms of Service | SENCI</title>
+  
+  <!-- SEO CORE -->
+  <title>Terms & Conditions | SENCI Hardware Performance Service</title>
+  <meta name="description" content="View the official Terms of Service for SENCI. Understand the legal agreement between you and SENCI SYSTEMS for hardware optimization and performance matrix updates.">
+  <meta name="keywords" content="SENCI Terms, Terms of Service, Legal Agreement, Hardware Optimization Liability, Software License, Senci App Terms">
+  <link rel="canonical" href="https://ff-sensi.shop/terms.html">
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/img/android-chrome-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="assets/img/site.webmanifest">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="p-10 md:p-24 overflow-y-auto">
-  <div class="max-w-4xl mx-auto">
-    <a href="index.html" class="inline-flex items-center gap-2 text-cyan-500 font-black text-xs uppercase tracking-widest mb-12 hover:gap-4 transition-all">
-      <span data-lucide="arrow-left" class="w-4 h-4"></span> Back to Base
+<body class="selection:bg-[#007AFF] selection:text-white bg-[#F2F2F7] text-[var(--text-color)]">
+  
+  <div class="fixed inset-0 pointer-events-none z-[-10] overflow-hidden bg-[#F2F2F7]">
+    <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="none" class="w-full h-full">
+      <defs>
+        <linearGradient id="grad-blue" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#007AFF" stop-opacity="0.1" />
+          <stop offset="100%" stop-color="#007AFF" stop-opacity="0.02" />
+        </linearGradient>
+        <linearGradient id="grad-green" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#34C759" stop-opacity="0.1" />
+          <stop offset="100%" stop-color="#34C759" stop-opacity="0.02" />
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
+          <feOffset dx="0" dy="5" result="offsetblur" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.1" /></feComponentTransfer>
+          <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="shadow-bottom" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
+          <feOffset dx="0" dy="-5" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.1" /></feComponentTransfer>
+          <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+      <path d="M 400 0 C 600 100, 800 50, 1000 250 L 1000 0 Z" fill="url(#grad-blue)" filter="url(#shadow)" />
+      <path d="M 200 0 C 400 150, 700 100, 1000 150 L 1000 0 Z" fill="#007AFF" opacity="0.03" />
+      <path d="M 0 700 C 100 850, 300 750, 600 1000 L 0 1000 Z" fill="url(#grad-green)" filter="url(#shadow-bottom)" />
+      <path d="M 0 850 C 150 950, 400 850, 800 1000 L 0 1000 Z" fill="#34C759" opacity="0.03" />
+      <path d="M 1000 400 C 850 450, 800 550, 1000 600 Z" fill="#FF9500" opacity="0.08" filter="url(#shadow)" />
+    </svg>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-6 pt-12 pb-0 md:pt-24 md:pb-0 relative z-10">
+    <a href="index.html" class="inline-flex items-center gap-2 text-[#007AFF] font-black text-[10px] uppercase tracking-[0.2em] mb-12 hover:gap-4 transition-all">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Core Matrix
     </a>
     
-    <div class="glass p-8 md:p-12 mb-12">
-      <h1 class="mb-10 text-white">Terms of <br /><span class="text-gradient-primary">Service.</span></h1>
-      <div class="space-y-8 text-[var(--muted-text)] leading-relaxed font-bold">
+    <div class="mb-12">
+      <h1 class="mb-12 text-[var(--text-color)] leading-tight uppercase font-black tracking-tighter">Terms & <br /><span class="text-gradient-primary uppercase text-sm font-black tracking-widest block mt-4">Conditions of Service v4.0</span></h1>
+      
+      <div class="space-y-12 text-[var(--muted-text)] leading-relaxed font-semibold">
         <section>
-          <h2 class="text-white text-xl mb-4">01. Usage License</h2>
-          <p>SENCI provides a non-exclusive license for personal use. It is strictly prohibited to decompile, reverse-engineer, or distribute the optimization matrix code.</p>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <span class="w-8 h-[2px] bg-blue-500"></span> 01. Legal Agreement
+          </h2>
+          <p class="mb-6">By accessing and utilizing the SENCI hardware optimization suite, you agree to be bound by these Terms of Service. This is a legally binding agreement between you ("The User") and SENCI SYSTEMS GLOBAL ("The Provider"). If you do not agree to these terms, you must immediately deactivate the core matrix and uninstall all SENCI application files from your device.</p>
+          <p>These terms apply to all versions of SENCI, including the free core engine, professional licenses (SENCI PRO), and any hardware-specific performance modules delivered through our cloud optics layer.</p>
         </section>
+
         <section>
-          <h2 class="text-white text-xl mb-4">02. Liability</h2>
-          <p>The user assumes all responsibility for hardware performance gains. While SENCI is built to maximize stability, performance gains depend on individual hardware health.</p>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <span class="w-8 h-[2px] bg-emerald-500"></span> 02. License Grant
+          </h2>
+          <p class="mb-6">Subject to your compliance with these Terms, SENCI SYSTEMS grants you a limited, non-exclusive, non-transferable, revocable license to use the SENCI software on mobile devices owned or controlled by you. This license is granted solely for personal, non-commercial hardware optimization. You may not:</p>
+          <ul class="list-disc pl-6 space-y-4">
+            <li><strong>Reverse Engineer:</strong> Attempt to decompile, decrypt, or re-engineer the Silk Matrix or core optimization algorithms.</li>
+            <li><strong>Redistribute:</strong> Host or distribute SENCI installation files through third-party repositories or modified application packages (APKs/IPAs).</li>
+            <li><strong>Commercial Abuse:</strong> Use the SENCI engine to provide optimization services for commercial gain or within a professional hardware benchmarking laboratory without an enterprise license.</li>
+          </ul>
         </section>
+
         <section>
-          <h2 class="text-white text-xl mb-4">03. Support</h2>
-          <p>Premium support is provided to all SENCI PRO members on a 24/7 basis through the Telegram channel.</p>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <span class="w-8 h-[2px] bg-red-400"></span> 03. Performance Disclaimer
+          </h2>
+          <p class="mb-6">SENCI interacts directly with hardware-level polling rates and frequency scaling. While we implement rigorous safety clusters, performance outcomes are highly dependent on the unique hardware quality, silicon lottery, and battery health of your specific device model. Therefore, results may vary. We do not guarantee specific percentage increases in FPS stability or touch response accuracy.</p>
+          <p>You acknowledge that using optimization tools can increase the thermal output of your device. It is your responsibility to monitor your device's temperature and follow the guidelines in our <strong>Safety Hub</strong>.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+             <span class="w-8 h-[2px] bg-orange-500"></span> 04. Limitation of Liability
+          </h2>
+          <p class="mb-6">TO THE MAXIMUM EXTENT PERMITTED BY LAW, SENCI SYSTEMS GLOBAL SHALL NOT BE LIABLE FOR ANY DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE SERVICE. THIS INCLUDES, BUT IS NOT LIMITED TO: HARDWARE OVERHEATING, BATTERY DEGRADATION, SYSTEM INSTABILITY, DATA LOSS, OR VOIDANCE OF MANUFACTURER WARRANTIES. YOU USE SENCI AT YOUR OWN RISK AND DISCRETION.</p>
+          <p>While we use standard APIs, some manufacturers may consider third-party hardware optimization software a violation of their native system integrity. You are solely responsible for understanding your device's warranty terms and conditions before activating the SENCI core.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <span class="w-8 h-[2px] bg-purple-500"></span> 05. Account & Pro Subscription
+          </h2>
+          <p class="mb-6">The SENCI PRO subscription provides access to advanced hardware profiles and real-time cloud data flux. Subscriptions are billed on a recurring basis as per the billing cycle chosen at the time of purchase. You may cancel your subscription at any time through the platform-specific store (App Store/Play Store) where the purchase was made. No partial refunds will be provided for late-cycle cancellations.</p>
+          <p>Misuse of the professional license across more than the allowed number of concurrent devices may lead to an automatic and permanent hardware-level ban from the SENCI network.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <span class="w-8 h-[2px] bg-cyan-400"></span> 06. User Conduct & Integrity
+          </h2>
+          <p class="mb-6">You agree not to use the SENCI optimization suite for any illegal purposes or to gain an unfair advantage in professional e-sports competitions that explicitly ban third-party performance modification software. It is your responsibility to comply with the rules of any third-party software or service you use while SENCI is active.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <span class="w-8 h-[2px] bg-[#34C759]"></span> 07. Updates & Modification
+          </h2>
+          <p class="mb-6">SENCI is a dynamic ecosystem. We reserve the right to modify, suspend, or discontinue any part of the service (including the free core engine) at any time. We also reserve the right to update these terms to reflect changes in global laws or hardware manufacturing standards. Your continued use of the service after such changes constitutes acceptance of the new terms.</p>
+        </section>
+
+        <section>
+          <h2 class="text-[var(--text-color)] text-2xl font-black mb-6 flex items-center gap-4">
+            <span class="w-8 h-[2px] bg-[#007AFF]"></span> 08. Contact & Legal Inquiry
+          </h2>
+          <p>All legal inquiries, DMCA notices, or formal disputes regarding these Terms should be directed to our legal department at <strong>legal@ff-sensi.shop</strong>. Any disputes shall be governed by the laws of the jurisdiction where SENCI SYSTEMS GLOBAL is incorporated, without regard to conflict of law principles.</p>
         </section>
       </div>
     </div>
     
-    <p class="text-[10px] font-black uppercase tracking-widest text-[var(--muted-text)] text-center">© 2024 SENCI SYSTEMS. ALL RIGHTS PROTECTED.</p>
+    <footer class="pt-12 pb-4 border-t border-[var(--glass-border)] mt-24">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-widest text-[var(--muted-text)]">
+        <p class="text-[var(--text-color)] text-[10px] tracking-[0.2em]">© 2024 SENCI SYSTEMS. ENGINEERED FOR SPEED.</p>
+        <div class="flex items-center gap-10 text-[var(--muted-text)]">
+          <a href="privacy.html" class="hover:text-[#007AFF] transition-colors">Privacy</a>
+          <a href="terms.html" class="hover:text-[#007AFF] transition-colors">Terms</a>
+          <a href="safety.html" class="hover:text-[#007AFF] transition-colors">Safety Hub</a>
+        </div>
+        <div class="flex items-center gap-6 opacity-60 text-[var(--text-color)]">
+          <i data-lucide="twitter" class="w-4 h-4"></i>
+          <i data-lucide="github" class="w-4 h-4"></i>
+        </div>
+      </div>
+    </footer>
   </div>
   
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>lucide.createIcons();</script>
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 </html>
