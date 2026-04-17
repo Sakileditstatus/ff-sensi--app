@@ -114,6 +114,16 @@
                         <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">USER VOTES</p>
                         <p id="votesTotal" class="text-2xl font-black mt-0.5">0</p>
                     </div>
+                    <div class="glass p-5 rounded-3xl ios-shadow">
+                        <div class="w-10 h-10 bg-teal-100 rounded-2xl flex items-center justify-center text-teal-600 mb-3"><i data-lucide="external-link" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">SHORT LINKS</p>
+                        <p id="shortLinksCount" class="text-2xl font-black mt-0.5">0</p>
+                    </div>
+                    <div class="glass p-5 rounded-3xl ios-shadow">
+                        <div class="w-10 h-10 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-3"><i data-lucide="mouse-pointer-click" class="w-5 h-5"></i></div>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">LINK CLICKS</p>
+                        <p id="totalShortClicks" class="text-2xl font-black mt-0.5">0</p>
+                    </div>
                 </div>
 
                 <div class="glass p-6 rounded-[32px] ios-shadow bg-gradient-to-br from-white to-blue-50/50">
@@ -432,9 +442,11 @@
                     headers: { ...getAuthHeader() } 
                 });
                 const data = decodePayload(await res.json());
-                document.getElementById('votesTotal').innerText = data.votes.total;
-                document.getElementById('slidersCount').innerText = data.sliders.length;
+                document.getElementById('votesTotal').innerText = data.votes.total || 0;
+                document.getElementById('slidersCount').innerText = data.sliders ? data.sliders.length : 0;
                 document.getElementById('devicesCount').innerText = data.devicesCount || 0;
+                document.getElementById('shortLinksCount').innerText = data.shortLinksCount || 0;
+                document.getElementById('totalShortClicks').innerText = data.totalShortClicks || 0;
                 if (data.links) {
                     document.getElementById('iosLink').value = data.links.ios || '';
                     document.getElementById('paidLink').value = data.links.paid || '';
