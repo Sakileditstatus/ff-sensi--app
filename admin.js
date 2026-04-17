@@ -54,10 +54,11 @@ router.get("/all", async (req, res) => {
         // ShortLink Stats
         let shortLinksCount = 0;
         let totalShortClicks = 0;
+        let allShortLinks = [];
         try {
-            shortLinksCount = await ShortLink.countDocuments();
-            const agg = await ShortLink.aggregate([{ $group: { _id: null, total: { $sum: "$clicks" } } }]);
-            totalShortClicks = agg.length > 0 ? agg[0].total : 0;
+            allShortLinks = await ShortLink.find().sort({ createdAt: -1 });
+            shortLinksCount = allShortLinks.length;
+            totalShortClicks = allShortLinks.reduce((acc, curr) => acc + curr.clicks, 0);
         } catch (e) { console.log("ShortLink Error:", e); }
 
         sendPayload(res, {
@@ -67,6 +68,7 @@ router.get("/all", async (req, res) => {
             totalHits,
             shortLinksCount,
             totalShortClicks,
+            allShortLinks,
             votes: {
                 total,
                 working,
