@@ -42,10 +42,18 @@ const DialogSchema = new mongoose.Schema({
     active: { type: Boolean, default: false }
 });
 
+const ShortLinkSchema = new mongoose.Schema({
+    originalUrl: { type: String, required: true },
+    shortId: { type: String, required: true, unique: true },
+    clicks: { type: Number, default: 0 },
+    createdAt: { type: Date, default: Date.now }
+});
+
 module.exports = {
     Senci: mongoose.models.Senci || mongoose.model("Senci", SenciSchema),
     Vote: mongoose.models.Vote || mongoose.model("Vote", VoteSchema),
     Slider: mongoose.models.Slider || mongoose.model("Slider", SliderSchema),
     Device: mongoose.models.Device || mongoose.model("Device", DeviceSchema),
-    Dialog: mongoose.models.Dialog || mongoose.model("Dialog", DialogSchema)
+    Dialog: mongoose.models.Dialog || mongoose.model("Dialog", DialogSchema),
+    ShortLink: mongoose.models.ShortLink || mongoose.model("ShortLink", ShortLinkSchema)
 };
