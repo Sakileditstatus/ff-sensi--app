@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const { Senci, Vote, Slider, Device, Dialog } = require("./models");
+const { Senci, Vote, Slider, Device, Dialog, ShortLink } = require("./models");
 
 // --- AUTH MIDDLEWARE (Protect all admin routes) ---
 const checkAuth = (req, res, next) => {
@@ -50,12 +50,23 @@ router.get("/all", async (req, res) => {
         const totalHits = links ? (links.hits || 0) : 0;
         const working = votes.filter(v => v && v.voteType === 'working').length;
         const total = votes.length;
+        
+        // ShortLink Stats
+        let shortLinksCount = 0;
+        let totalShortClicks = 0;
+        try {
+            shortLinksCount = await ShortLink.countDocuments();
+            const agg = await ShortLink.aggregate([{ $group: { _id: null, total: { $sum: "$clicks" } } }]);
+            totalShortClicks = agg.length > 0 ? agg[0].total : 0;
+        } catch (e) { console.log("ShortLink Error:", e); }
 
         sendPayload(res, {
             links,
             sliders,
             devicesCount,
             totalHits,
+            shortLinksCount,
+            totalShortClicks,
             votes: {
                 total,
                 working,
